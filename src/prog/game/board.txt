@@ -1,0 +1,49 @@
+i = 0
+x
+i += 1
+if i < 1:
+ x
+else:
+ x
+ x
+x
+if d1 < 3:
+ g
+elif d1 < 4:
+ x
+ x
+ if d2 > 1:
+  x
+  x
+ else:
+  x
+else:
+ x
+g
+x
+if d1 > 4:
+ x
+else:
+ x
+ g
+x
+x
+x
+if d1 > 2 and d2 <= 5:
+ g
+x
+if d1 < 2 or d2 >= 5:
+ g
+x
+x
+if d1 < 2:
+ g
+elif d2 >= 4:
+ x
+g
+while i < d1:
+ i += 1
+i=6
+while d2 < i:
+ i -= 1
+x
