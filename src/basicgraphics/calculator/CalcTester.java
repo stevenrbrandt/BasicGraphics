@@ -40,7 +40,7 @@ public class CalcTester {
         } catch (AssertionError ae) {
         }
         Auto a = new Auto();
-        Calculator c = (Calculator) Class.forName(args[0]).newInstance();
+        Calculator c = (Calculator) Class.forName(args[0]).getDeclaredConstructor().newInstance();
         c.init();
         Thread.sleep(1000);
         double d1, d2, dval;
