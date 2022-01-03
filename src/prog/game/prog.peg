@@ -1,0 +1,25 @@
+# PEG File
+skipper = (\b[ \t]*|[ \t]+)
+
+name = [a-zA-Z][a-zA-Z0-9_]*
+float = -?[0-9]+\.[0-9]+
+num = -?[0-9]+
+addop = [+-]
+mulop = [*/%]
+factor = {name}|{float}|{num}|\( {expr} \)
+addend = {-factor}( {mulop} {-factor})*
+expr = {addend}( {addop} {addend})*
+condop = ([<>]=?|==|!=)
+cond2 = {expr} {condop} {expr}
+cond1 = not {expr}
+cond = (\( {condexpr} \)|{cond1}|{cond2})
+andor = (and|or)
+condexpr = {-cond}( {andor} {-cond})?
+iew = (if|elif|while)
+aop = (\+=|-=|=)
+assign = {name} {aop} {expr}
+s = [ \t]*
+x = x
+g = g
+else = else 
+line = ^{s}({iew} {condexpr} :|{else}:|{x}|{g}|{assign}).*$
