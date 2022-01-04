@@ -9,10 +9,7 @@ import basicgraphics.CollisionEventType;
 import basicgraphics.Sprite;
 import basicgraphics.SpriteCollisionEvent;
 import basicgraphics.SpriteComponent;
-import basicgraphics.SpriteSpriteCollisionListener;
 import basicgraphics.sounds.ReusableClip;
-import java.applet.AudioClip;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -51,7 +48,7 @@ public class Enemy extends Sprite {
         setVelY(2 * Game.RAND.nextDouble() - 1);
     }
     
-    final static AudioClip clip = new ReusableClip("die.wav");
+    final static ReusableClip clip = new ReusableClip("die.wav");
 
     @Override
     public void processEvent(SpriteCollisionEvent se) {

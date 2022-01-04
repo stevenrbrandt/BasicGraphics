@@ -1,64 +1,89 @@
 package basicgraphics.sounds;
 
 import basicgraphics.BasicFrame;
-import basicgraphics.FileUtility;
-import basicgraphics.GuiException;
-import javax.sound.sampled.Clip;
+import java.io.File;
+import java.io.IOException;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 
-import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
  * An interface to the java sound system
  *
  * @author sbrandt
  */
-public final class ReusableClip implements java.applet.AudioClip {
+public final class ReusableClip {
 
-    private Clip clip;
-
+    byte[] buf;
+    SourceDataLine sourceLine;
+    Thread thread;
+    
     public ReusableClip(String name) {
-        URL src = getClass().getResource(name);
-        if (src == null) {
-            src = FileUtility.findFile(name);
-        }
         try {
-            clip = AudioSystem.getClip();
-            AudioInputStream audioIn = AudioSystem.getAudioInputStream(src);
-            clip.open(audioIn);
-        } catch (Exception ex) {
-            ;//throw new GuiException();
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(new File(name));
+            AudioFormat audioFormat = audioStream.getFormat();
+            DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormat);
+            sourceLine = (SourceDataLine) AudioSystem.getLine(info);
+            sourceLine.open(audioFormat);
+            long nbytes = audioStream.getFrameLength();
+            buf = new byte[(int)nbytes];
+            audioStream.read(buf);
+            thread = new Thread(()->{});
+            thread.start();
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
+            Logger.getLogger(ReusableClip.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    @Override
-    public void play() {
-        if(!clip.isActive())
-            clip.loop(1);
+    public synchronized void play() {
+        try {
+            looping = false;
+            thread.join();
+        } catch (InterruptedException ex) {
+        }
+        thread = new Thread(() -> {
+            sourceLine.start();
+            sourceLine.write(buf, 0, buf.length);
+            sourceLine.drain();
+        });
+        thread.start();
     }
 
-    @Override
-    public void loop() {
-        if(!clip.isActive())
-            clip.loop(Clip.LOOP_CONTINUOUSLY);
+    boolean looping = true;
+    public synchronized void loop() {
+        try {
+            looping = false;
+            thread.join();
+        } catch (InterruptedException ex) {
+        }
+        thread = new Thread(() -> {
+            while (looping) {
+                sourceLine.start();
+                sourceLine.write(buf, 0, buf.length);
+                sourceLine.drain();
+            }
+        });
+        thread.start();
     }
 
-    @Override
-    public void stop() {
-        if(clip.isActive())
-            clip.stop();
+    public synchronized void stop() {
+        looping = false;
     }
 
     public static void main(String[] args) throws Exception {
         // It won't play without a JFrame.
         BasicFrame bf = new BasicFrame("title");
         bf.show();
-        ReusableClip clip1 = new ReusableClip("lazer.wav");
+        ReusableClip clip1 = new ReusableClip("C:\\Users\\Steve\\Downloads\\arrow_x.wav");
         long t1 = System.currentTimeMillis();
-        clip1.loop();
+        clip1.play();
         long t2 = System.currentTimeMillis();
         System.out.printf("time=%d%n",(t2-t1));
         bf.dispose();
