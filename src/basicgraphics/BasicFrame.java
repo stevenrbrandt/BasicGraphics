@@ -130,6 +130,15 @@ public class BasicFrame {
     }
 
     /**
+     * Sets the layout of this frame to a simple layout with a single centered component.
+     * @param mainComponent The component.
+     */
+    public void createBasicLayout(JComponent mainComponent) {
+        this.setStringLayout(new String[][] {{"center"}});
+        this.add("center", mainComponent);
+    }
+
+    /**
      * Enables you to design your screen with a 2D ascii array.
      * The design takes the form of a rectangular grid in which
      * logically rectangular regions on the screen are mapped to
