@@ -39,7 +39,7 @@ public class FileUtility {
     
     public static File findFile(Class c, String name) {
         URL d = c.getResource(".");
-        return findFile(new File(d.getFile()),name);
+        return findFile(new File(d.getFile().replace("%20"," ")),name);
     }
 
     static File findFile(File file, String name) {
