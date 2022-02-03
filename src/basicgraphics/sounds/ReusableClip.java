@@ -1,8 +1,8 @@
 package basicgraphics.sounds;
 
 import basicgraphics.BasicFrame;
-import basicgraphics.FileUtility;
-import java.io.File;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.LinkedList;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -24,7 +24,7 @@ public final class ReusableClip {
     static Thread thread;
     static boolean running = false;
     static LinkedList<ReusableClip> queue = new LinkedList<>();
-    static boolean verbose = false;
+    public static boolean verbose = false;
     
     static {
         thread = new Thread(()->{});
@@ -58,9 +58,10 @@ public final class ReusableClip {
                     if(clip.looping)
                         enqueue(clip);
                     } catch(Throwable e) {
-                        System.err.println("endclip: "+e);
                         if(verbose)
                             e.printStackTrace();
+                        else
+                            System.err.println("endclip: "+e);
                     }
                 }
                 done();
@@ -68,16 +69,24 @@ public final class ReusableClip {
             thread.start();
         }
     }
+    
+    private static URI getURI(String name) {
+        try {
+            return ReusableClip.class.getResource(name).toURI();
+        } catch (URISyntaxException ex) {
+            return null;
+        }
+    }
     public ReusableClip(String name) {
-        this(FileUtility.findFile(ReusableClip.class, name));
+        this(getURI(name));
     }
     final String name;
-    public ReusableClip(File f) {
-        this.name = f.getName();
+    public ReusableClip(URI uri) {
+        this.name = uri == null ? "?" : uri.getPath();
         try {
             if(verbose)
-                System.out.println("loading sound: "+f);
-            AudioInputStream audioStream = AudioSystem.getAudioInputStream(f);
+                System.out.println("loading sound: "+uri);
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(uri.toURL());
             AudioFormat audioFormat = audioStream.getFormat();
             DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormat);
             sourceLine = (SourceDataLine) AudioSystem.getLine(info);
@@ -87,9 +96,10 @@ public final class ReusableClip {
             buf = new byte[(int)nbytes];
             audioStream.read(buf);
         } catch (Exception ex) {
-            System.err.println(ex);
             if(verbose)
                 ex.printStackTrace();
+            else
+                System.err.println(ex);
         }
     }
     
@@ -127,7 +137,7 @@ public final class ReusableClip {
         long t1 = System.currentTimeMillis();
         clip1.loop();
         clip2.loop();
-        Thread.sleep(15000);
+        Thread.sleep(5000);
         clip1.stop();
         clip2.stop();
         long t2 = System.currentTimeMillis();
