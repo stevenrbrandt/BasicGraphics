@@ -14,7 +14,7 @@ import javax.sound.sampled.SourceDataLine;
 /**
  * An interface to the java sound system
  *
- * @author sbrandt
+ * @author Steven R. Brandt
  */
 public final class ReusableClip {
 
@@ -59,6 +59,8 @@ public final class ReusableClip {
                         enqueue(clip);
                     } catch(Throwable e) {
                         System.err.println("endclip: "+e);
+                        if(verbose)
+                            e.printStackTrace();
                     }
                 }
                 done();
@@ -73,6 +75,8 @@ public final class ReusableClip {
     public ReusableClip(File f) {
         this.name = f.getName();
         try {
+            if(verbose)
+                System.out.println("loading sound: "+f);
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(f);
             AudioFormat audioFormat = audioStream.getFormat();
             DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormat);
@@ -84,6 +88,8 @@ public final class ReusableClip {
             audioStream.read(buf);
         } catch (Exception ex) {
             System.err.println(ex);
+            if(verbose)
+                ex.printStackTrace();
         }
     }
     
@@ -113,6 +119,7 @@ public final class ReusableClip {
 
     public static void main(String[] args) throws Exception {
         // It won't play without a JFrame.
+        verbose = true;
         BasicFrame bf = new BasicFrame("title");
         bf.show();
         ReusableClip clip1 = new ReusableClip("arrow.wav");
