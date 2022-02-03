@@ -129,7 +129,11 @@ public class BasicFrame {
         this.baseLayout = (String[][])layout.clone();
     }
 
-    public void createBasicLayout(SpriteComponent mainComponent) {
+    /**
+     * Sets the layout of this frame to a simple layout with a single centered component.
+     * @param mainComponent The component.
+     */
+    public void createBasicLayout(JComponent mainComponent) {
         this.setStringLayout(new String[][] {{"center"}});
         this.add("center", mainComponent);
     }
