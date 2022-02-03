@@ -9,6 +9,7 @@ import basicgraphics.BasicContainer;
 import basicgraphics.BasicFrame;
 import basicgraphics.Clock;
 import basicgraphics.SpriteComponent;
+import basicgraphics.sounds.ReusableClip;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Container;
@@ -32,6 +33,7 @@ import javax.swing.JLabel;
  */
 public class Flyer {
     public static void main(String[] args) throws IOException {
+        final ReusableClip clip = new ReusableClip("beep.wav");
         final BasicFrame bf = new BasicFrame("Flyer");
         final Container content = bf.getContentPane();
         final CardLayout cards = new CardLayout();
@@ -101,6 +103,7 @@ public class Flyer {
                     pl.setVelY(f.getVelY()*2);
                     pl.setCenterX(f.centerX());
                     pl.setCenterY(f.centerY());
+                    clip.play();
                 }
             }
         });
