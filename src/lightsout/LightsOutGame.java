@@ -24,9 +24,7 @@ public class LightsOutGame {
     public void run() {
         sc = new SpriteComponent();
         sc.setPreferredSize(WINDOW_SIZE);
-        String[][] layout = {{"center"}};
-        frame.setStringLayout(layout);
-        frame.add("center", sc);
+        frame.createBasicLayout(sc);
 
         tiles = new Tile[N_TILES][N_TILES];
         for (int i = 0; i < N_TILES; i++) {

@@ -129,6 +129,11 @@ public class BasicFrame {
         this.baseLayout = (String[][])layout.clone();
     }
 
+    public void createBasicLayout(SpriteComponent mainComponent) {
+        this.setStringLayout(new String[][] {{"center"}});
+        this.add("center", mainComponent);
+    }
+
     /**
      * Enables you to design your screen with a 2D ascii array.
      * The design takes the form of a rectangular grid in which
