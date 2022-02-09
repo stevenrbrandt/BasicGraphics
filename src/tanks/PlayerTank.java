@@ -8,7 +8,7 @@ public class PlayerTank extends Tank {
 
     public PlayerTank(SpriteComponent sc) {
         super(sc);
-        setVelocity(1); // choo choo
+        setVelocity(1.3); // choo choo
     }
 
     @Override

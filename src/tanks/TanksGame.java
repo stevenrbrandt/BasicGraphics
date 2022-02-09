@@ -20,15 +20,23 @@ public class TanksGame {
     private SpriteComponent sc;
     private final BasicFrame frame = new BasicFrame("Tanks Tanks Tanks Tanks!");
 
+    static PlayerTank player;
+
     public void run() {
         sc = new SpriteComponent();
+
         sc.setPreferredSize(WINDOW_SIZE);
         frame.createBasicLayout(sc);
 
-        var player = new PlayerTank(sc);
-        var crosshair = new Crosshair(sc);
+        player = new PlayerTank(sc);
         player.setX(400.);
         player.setY(400.);
+
+        var s1 = new EnemyTanks.SmartTank(sc);
+        s1.setX(100);
+        s1.setY(100);
+
+        var crosshair = new Crosshair(sc);
 
         frame.show();
         Clock.start(10);
@@ -68,11 +76,12 @@ public class TanksGame {
         sc.addSpriteSpriteCollisionListener(Bullet.class, Tank.class, (bullet, tank) -> {
             if (tank instanceof PlayerTank) {
                 if (!bullet.isFriendly()) {
+                    tank.setActive(false);
                     JOptionPane.showMessageDialog(sc, "You're loser.");
                     System.exit(0);
                 }
-            } else {
-                System.out.println("enemy died");
+            } else if (bullet.isFriendly()) {
+                tank.setActive(false);
             }
         });
 
