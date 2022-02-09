@@ -9,6 +9,7 @@ import basicgraphics.images.Picture;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.LinkedList;
 
 /**
  * This class implements an animated object that moves
@@ -189,7 +190,7 @@ public class Sprite implements MouseListener {
                 eventType = CollisionEventType.WALL_INVISIBLE;
             }
             if (eventType != inWall) {
-                processEvent(new SpriteCollisionEvent(xlo, xhi, ylo, yhi, eventType));
+                doProcessEvent(new SpriteCollisionEvent(xlo, xhi, ylo, yhi, eventType));
                 inWall = eventType;
             }
         } else {
@@ -272,4 +273,33 @@ public class Sprite implements MouseListener {
     final public void processEvent() {}
     final public void preMove() {}
     final public void postMove() {}
+
+    final private LinkedList<SpriteCollisionEvent> events = new LinkedList<>();
+    private boolean running;
+    
+    /**
+     * This method serializes the events, preventing them happening all
+     * at once.
+     * @param spriteCollisionEvent 
+     */
+    private void doProcessEvent(SpriteCollisionEvent spriteCollisionEvent) {
+        synchronized(events) {
+            if(running) {
+                events.addLast(spriteCollisionEvent);
+                return;
+            } else {
+                running = true;
+            }
+        }
+        while(true) {
+            processEvent(spriteCollisionEvent);
+            synchronized(events) {
+                if(events.isEmpty()) {
+                    running = false;
+                } else {
+                    spriteCollisionEvent = events.removeFirst();
+                }
+            }
+        }
+    }
 }
