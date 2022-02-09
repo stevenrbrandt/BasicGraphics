@@ -50,27 +50,20 @@ public class TanksGame {
             crosshair.setCenterY(mousePosition.getY());
             player.setAimingAtX(mousePosition.getX());
             player.setAimingAtY(mousePosition.getY());
-            player.draw();
-            player.updateVelocity();
-        });
 
-        frame.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                int keyCode = e.getKeyCode();
+            var a = frame.isKeyHeld(VK_A);
+            var d = frame.isKeyHeld(VK_D);
 
-                if (keyCode == VK_A) {
+            if (!a || !d) {
+                if (a) {
                     player.setHeading(player.getHeading() - 0.05);
-                } else if (keyCode == VK_D) {
+                } else if (d) {
                     player.setHeading(player.getHeading() + 0.05);
                 }
-
-                //if (keyCode == VK_W) {
-                //    player.setVelocity(1);
-                //}
-
-                player.draw();
             }
+
+            player.draw();
+            player.updateVelocity();
         });
 
         sc.addSpriteSpriteCollisionListener(Bullet.class, Tank.class, (bullet, tank) -> {
