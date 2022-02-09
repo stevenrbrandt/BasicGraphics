@@ -296,6 +296,7 @@ public class Sprite implements MouseListener {
             synchronized(events) {
                 if(events.isEmpty()) {
                     running = false;
+                    break;
                 } else {
                     spriteCollisionEvent = events.removeFirst();
                 }

@@ -353,9 +353,10 @@ public class SpriteComponent extends JComponent implements MouseListener {
     Map<Class,Map<Class,SpriteSpriteCollisionListener>> cclisteners = new HashMap<>();
     
     public <T1 extends Sprite,T2 extends Sprite> void addSpriteSpriteCollisionListener(Class<T1> cl1,Class<T2> cl2,SpriteSpriteCollisionListener<T1,T2> ssl) {
-        Map<Class, SpriteSpriteCollisionListener> m = cclisteners.get(cl1);
-        if(m == null) cclisteners.put(cl1,m = new HashMap<>());
-        m.put(cl2,ssl);
+//        Map<Class, SpriteSpriteCollisionListener> m = cclisteners.get(cl1);
+//        if(m == null) cclisteners.put(cl1,m = new HashMap<>());
+//        m.put(cl2,ssl);
+        cclisteners.computeIfAbsent(cl1, (k)->{ return new HashMap<>(); }).computeIfAbsent(cl2, k->ssl);
     }
     
     Set<String> msgs = new HashSet<>();
