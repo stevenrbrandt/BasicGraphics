@@ -48,6 +48,10 @@ public abstract class Tank extends Sprite {
         return p;
     }
 
+    public double getAimingDirection() {
+        return Math.atan2(aimingAtY - (getY() + 35), aimingAtX - (getX() + 35));
+    }
+
     public void setAimingAtX(double aimingAtX) {
         this.aimingAtX = aimingAtX;
     }

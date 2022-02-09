@@ -1,13 +1,13 @@
 package tanks;
 
-import basicgraphics.BasicFrame;
-import basicgraphics.Clock;
-import basicgraphics.SpriteComponent;
-import basicgraphics.Task;
+import basicgraphics.*;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import static java.awt.event.KeyEvent.*;
 
@@ -62,6 +62,24 @@ public class TanksGame {
                 //}
 
                 player.draw();
+            }
+        });
+
+        sc.addSpriteSpriteCollisionListener(Bullet.class, Tank.class, (bullet, tank) -> {
+            if (tank instanceof PlayerTank) {
+                if (!bullet.isFriendly()) {
+                    JOptionPane.showMessageDialog(sc, "You're loser.");
+                    System.exit(0);
+                }
+            } else {
+                System.out.println("enemy died");
+            }
+        });
+
+        sc.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                new Bullet(sc, player, player.getAimingDirection(), 3., true);
             }
         });
     }
