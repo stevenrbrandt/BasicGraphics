@@ -73,6 +73,11 @@ public class BasicGraphics {
         @Override
         public void mouseClicked(MouseEvent me) {
             setPicture(orangeBall);
+            if(dead) {
+                dead = false;
+                setVelX(getVelX()*2);
+                setVelY(getVelY()*2);
+            }
         }
 
         @Override
@@ -124,10 +129,6 @@ public class BasicGraphics {
         f.add("botr", new JLabel("corner", JLabel.CENTER));
 
         Bat bat = new Bat(sc);
-
-        bat.setPicture(new Picture("bat.png"));
-        bat.setVelX(1);
-        bat.setVelY(1);
 
         Dimension d = new Dimension(800, 400);
         sc.setPreferredSize(d);
@@ -198,19 +199,23 @@ public class BasicGraphics {
         sc.addSpriteSpriteCollisionListener(Ball.class, Bat.class, new SpriteSpriteCollisionListener<Ball, Bat>() {
             @Override
             public void collision(Ball sp1, Bat sp2) {
+                if(sp1.dead) return;
                 sp1.dead = true;
+                sp1.setVelX(sp1.getVelX()/2);
+                sp1.setVelY(sp1.getVelY()/2);
                 sp1.setPicture(blueBall);
                 Clock.addTask(new Task(DIE_AFTER) {
                     public void run() {
                         if (iteration() == DIE_AFTER) {
-                            sp1.setActive(false);
+                            if(sp1.dead) sp1.setActive(false);
                         }
                     }
                 });
+                //Clock.addTask(new DeathTimer(DIE_AFTER,sp1));
             }
         });
 
-        Clock.start(10);
+        Clock.start(20);
         Clock.addTask(sc.moveSprites());
 
         f.add("row3", sc);

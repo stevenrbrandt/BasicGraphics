@@ -9,6 +9,7 @@ import basicgraphics.CollisionEventType;
 import basicgraphics.Sprite;
 import basicgraphics.SpriteCollisionEvent;
 import basicgraphics.SpriteComponent;
+import basicgraphics.images.Picture;
 
 /**
  *
@@ -18,6 +19,9 @@ public class Bat extends Sprite {
 
     public Bat(SpriteComponent sc) {
         super(sc);
+        setPicture(new Picture("bat.png"));
+        setVelX(1);
+        setVelY(1);
     }
 
     @Override
