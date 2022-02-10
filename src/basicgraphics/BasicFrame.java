@@ -11,9 +11,7 @@ import java.awt.Container;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,6 +24,7 @@ import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Manages a JFrame object for you, hopefully
@@ -65,6 +64,18 @@ public class BasicFrame {
                     "Frame. Use JDialog + BasicContainer for "+
                     "additional windows");
         savedFrame = this;
+
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                heldKeys.put(e.getKeyCode(), true);
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                heldKeys.put(e.getKeyCode(), false);
+            }
+        });
     }
     
     public static BasicFrame getFrame() {
@@ -428,6 +439,12 @@ public class BasicFrame {
 
     public Container getContentPane() {
         return jf.getContentPane();
+    }
+
+    private final Map<Integer, Boolean> heldKeys = new ConcurrentHashMap<>();
+
+    public final boolean isKeyHeld(int keycode) {
+        return heldKeys.getOrDefault(keycode, false);
     }
 
     /**
