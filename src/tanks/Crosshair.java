@@ -7,6 +7,9 @@ import basicgraphics.images.Picture;
 
 import java.awt.*;
 
+/**
+ * @author Max Morris
+ */
 public class Crosshair extends Sprite {
     public Crosshair(SpriteComponent sc) {
         super(sc);

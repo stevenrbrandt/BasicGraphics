@@ -11,6 +11,9 @@ import java.util.Random;
 
 import static java.awt.event.KeyEvent.*;
 
+/**
+ * @author Max Morris
+ */
 public class TanksGame {
 
     public static final Dimension MAIN_GAME_SIZE = new Dimension(900, 900);

@@ -4,6 +4,9 @@ import basicgraphics.SpriteComponent;
 
 import java.awt.*;
 
+/**
+ * @author Max Morris
+ */
 public class PlayerTank extends Tank {
 
     private int score;

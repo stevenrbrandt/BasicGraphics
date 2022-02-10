@@ -12,6 +12,9 @@ import java.util.Random;
 
 import static tanks.TanksGame.*;
 
+/**
+ * @author Max Morris
+ */
 public class EnemyTanks {
     private EnemyTanks() { }
 

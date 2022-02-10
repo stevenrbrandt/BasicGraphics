@@ -11,6 +11,9 @@ import java.awt.event.MouseEvent;
 import static lightsout.LightsOutGame.N_TILES;
 import static lightsout.LightsOutGame.TILE_SIZE;
 
+/**
+ * @author Max Morris
+ */
 public class Tile extends Sprite {
     public boolean lit;
     public final int x, y;

@@ -6,9 +6,11 @@ import basicgraphics.SpriteComponent;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.LinkedList;
 import java.util.Random;
 
+/**
+ * @author Max Morris
+ */
 public class LightsOutGame {
     public static final int TILE_SIZE = 75;
     public static final int N_TILES = 3;

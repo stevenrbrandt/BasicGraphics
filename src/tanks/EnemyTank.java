@@ -7,6 +7,9 @@ import basicgraphics.Task;
 
 import java.awt.*;
 
+/**
+ * @author Max Morris
+ */
 public abstract class EnemyTank extends Tank {
 
     private final Color color;
