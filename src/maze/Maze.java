@@ -285,8 +285,8 @@ public class Maze {
         RAND.setSeed(seed);
         Maze maze = new Maze();
         final boolean[] worked = {false};
-        final PathFinder solver = (PathFinder) Class.forName(args[0]).newInstance();
-        final PathFinder solver2 = (PathFinder) Class.forName(args[0]).newInstance();
+        final PathFinder solver = (PathFinder) Class.forName(args[0]).getDeclaredConstructor().newInstance();
+        final PathFinder solver2 = (PathFinder) Class.forName(args[0]).getDeclaredConstructor().newInstance();
         try {
             //maze.initBoard(40,20);
             maze.initBoard(15, 15);
