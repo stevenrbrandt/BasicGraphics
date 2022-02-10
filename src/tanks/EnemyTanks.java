@@ -71,7 +71,7 @@ public class EnemyTanks {
                     player.centerY(),
                     player.getVelX(),
                     player.getVelY(),
-                    2
+                    4
             );
 
             if (t != null) {
@@ -83,7 +83,41 @@ public class EnemyTanks {
             }
 
             if (stopWatch > 1500) {
-                fireBullet(2, getAimingDirection());
+                fireBullet(4, getAimingDirection());
+                resetStopwatch();
+            }
+        }
+    }
+
+    @Weight(3)
+    public static class SharpshooterTank extends EnemyTank {
+
+        public SharpshooterTank(SpriteComponent sc) {
+            super(sc, new Color(208, 12, 241), 10, "Sharpshooter");
+        }
+
+        @Override
+        public void brain(long stopWatch) {
+            var t = leadProjectile(
+                    centerX(),
+                    centerY(),
+                    player.centerX(),
+                    player.centerY(),
+                    player.getVelX(),
+                    player.getVelY(),
+                    15
+            );
+
+            if (t != null) {
+                setAimingAtX(t.getA());
+                setAimingAtY(t.getB());
+            } else {
+                setAimingAtX(player.centerX());
+                setAimingAtY(player.centerY());
+            }
+
+            if (stopWatch > 5000) {
+                fireBullet(15, getAimingDirection());
                 resetStopwatch();
             }
         }
@@ -220,6 +254,64 @@ public class EnemyTanks {
         }
     }
 
+    @Weight(1)
+    public static class MobileFlowerTank extends EnemyTank {
+
+        private long shotTimer, roamTimer;
+        private double dHeading, fireOffset;
+        private State state = State.DRIVING;
+
+        private final Random r = new Random();
+
+        private enum State {
+            TURNING,
+            DRIVING
+        }
+
+        public MobileFlowerTank(SpriteComponent sc) {
+            super(sc, new Color(189, 89, 3), 35, "Bloomflower Tank");
+            setVelocity(1.5);
+        }
+
+        @Override
+        public void brain(long stopWatch) {
+            resetStopwatch();
+            shotTimer += stopWatch;
+            roamTimer += stopWatch;
+
+            setAimingAtX(player.centerX());
+            setAimingAtY(player.centerY());
+
+            switch (state) {
+                case DRIVING:
+                    if (roamTimer > 2000) {
+                        roamTimer = 0;
+                        state = State.TURNING;
+                        dHeading = r.nextBoolean() ? -0.05 : 0.05;
+                        setVelocity(0);
+                    } else if (shotTimer > 100) {
+                        shotTimer = 0;
+                        fireBullet(3, fireOffset);
+                        fireOffset += Math.PI / 6;
+                        if (fireOffset > 2 * Math.PI) {
+                            fireOffset = -2 * Math.PI;
+                        }
+                    }
+                    break;
+                case TURNING:
+                    if (roamTimer > 1500) {
+                        roamTimer = 0;
+                        state = State.DRIVING;
+                        dHeading = 0;
+                        setVelocity(1.5);
+                    } else {
+                        setHeading(getHeading() + dHeading);
+                    }
+                    break;
+            }
+        }
+    }
+
     @Weight(7)
     public static class SmartMobileBurstTank extends EnemyTank {
 
@@ -253,7 +345,7 @@ public class EnemyTanks {
                     player.centerY(),
                     player.getVelX(),
                     player.getVelY(),
-                    2
+                    3
             );
 
             if (t != null) {
@@ -277,6 +369,141 @@ public class EnemyTanks {
                         shotTimer = 0;
                         var deviation = r.nextDouble(0.1) - 0.05;
                         fireBullet(3, getAimingDirection() + deviation);
+                    }
+                    break;
+                case TURNING:
+                    if (roamTimer > 500) {
+                        roamTimer = 0;
+                        state = State.DRIVING;
+                        dHeading = 0;
+                        setVelocity(1.5);
+                    } else {
+                        setHeading(getHeading() + dHeading);
+                    }
+                    break;
+            }
+        }
+    }
+
+    @Weight(5)
+    public static class MobileScatterTank extends EnemyTank {
+
+        private int shotsLeft = 6;
+        private long shotTimer, roamTimer;
+        private double dHeading;
+        private State state = State.DRIVING;
+
+        private final Random r = new Random();
+
+        private enum State {
+            TURNING,
+            DRIVING
+        }
+
+        public MobileScatterTank(SpriteComponent sc) {
+            super(sc, new Color(114, 98, 239), 20, "Scattershot Tank");
+            setVelocity(1.5);
+        }
+
+        @Override
+        public void brain(long stopWatch) {
+            resetStopwatch();
+            shotTimer += stopWatch;
+            roamTimer += stopWatch;
+
+            var t = leadProjectile(
+                    centerX(),
+                    centerY(),
+                    player.centerX(),
+                    player.centerY(),
+                    player.getVelX(),
+                    player.getVelY(),
+                    3
+            );
+
+            if (t != null) {
+                setAimingAtX(t.getA());
+                setAimingAtY(t.getB());
+            } else {
+                setAimingAtX(player.centerX());
+                setAimingAtY(player.centerY());
+            }
+
+            switch (state) {
+                case DRIVING:
+                    if (shotsLeft == 0 && roamTimer > 2000) {
+                        roamTimer = 0;
+                        state = State.TURNING;
+                        shotsLeft = r.nextInt(11 - 4) + 4;
+                        dHeading = r.nextBoolean() ? -0.05 : 0.05;
+                        setVelocity(0);
+                    } else if (shotsLeft > 0 && shotTimer > 2300) {
+                        --shotsLeft;
+                        shotTimer = 0;
+                        fireBullet(3, getAimingDirection());
+                        fireBullet(3, getAimingDirection() - 0.05 - r.nextDouble(0.03));
+                        fireBullet(3, getAimingDirection() - 0.1 - r.nextDouble(0.03));
+                        fireBullet(3, getAimingDirection() + 0.05 + r.nextDouble(0.03));
+                        fireBullet(3, getAimingDirection() + 0.1 + r.nextDouble(0.03));
+                    }
+                    break;
+                case TURNING:
+                    if (roamTimer > 500) {
+                        roamTimer = 0;
+                        state = State.DRIVING;
+                        dHeading = 0;
+                        setVelocity(1.5);
+                    } else {
+                        setHeading(getHeading() + dHeading);
+                    }
+                    break;
+            }
+        }
+    }
+
+    @Weight(1)
+    public static class CrazyMobileScatterTank extends EnemyTank {
+
+        private int shotsLeft = 6;
+        private long shotTimer, roamTimer;
+        private double dHeading;
+        private State state = State.DRIVING;
+
+        private final Random r = new Random();
+
+        private enum State {
+            TURNING,
+            DRIVING
+        }
+
+        public CrazyMobileScatterTank(SpriteComponent sc) {
+            super(sc, new Color(13, 1, 117), 40, "Crazy Scattershot Tank");
+            setVelocity(1.5);
+        }
+
+        @Override
+        public void brain(long stopWatch) {
+            resetStopwatch();
+            shotTimer += stopWatch;
+            roamTimer += stopWatch;
+
+            setAimingAtX(player.centerX());
+            setAimingAtY(player.centerY());
+
+            switch (state) {
+                case DRIVING:
+                    if (shotsLeft == 0 && roamTimer > 2000) {
+                        roamTimer = 0;
+                        state = State.TURNING;
+                        shotsLeft = r.nextInt(11 - 4) + 4;
+                        dHeading = r.nextBoolean() ? -0.05 : 0.05;
+                        setVelocity(0);
+                    } else if (shotsLeft > 0 && shotTimer > 1500) {
+                        --shotsLeft;
+                        shotTimer = 0;
+                        for (int i = 0; i < 20; i++) {
+                            fireBullet(2, getAimingDirection() + r.nextDouble() - 0.5);
+                        }
                     }
                     break;
                 case TURNING:

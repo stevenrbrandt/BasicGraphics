@@ -103,7 +103,7 @@ public class TanksGame {
             } else if (bullet.isFriendly()) {
                 tank.setActive(false);
                 boom.play();
-                player.setAmmo(player.getAmmo() + 6);
+                player.setAmmo(player.getAmmo() + 3);
                 player.setScore(player.getScore() + ((EnemyTank) tank).getScoreValue());
                 liveTanks--;
             }
