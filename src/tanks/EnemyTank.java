@@ -10,14 +10,16 @@ import java.awt.*;
 public abstract class EnemyTank extends Tank {
 
     private final Color color;
+    private final int scoreValue;
 
     private long prevTime;
     private long stopWatch;
 
-    public EnemyTank(SpriteComponent sc, Color color) {
+    public EnemyTank(SpriteComponent sc, Color color, int scoreValue) {
         super(sc);
         this.color = color;
         this.prevTime = System.currentTimeMillis();
+        this.scoreValue = scoreValue;
 
         Clock.addTask(new Task() {
             @Override
@@ -58,5 +60,9 @@ public abstract class EnemyTank extends Tank {
     @Override
     final public Color getColor() {
         return color;
+    }
+
+    public int getScoreValue() {
+        return scoreValue;
     }
 }
