@@ -11,6 +11,7 @@ public class Crosshair extends Sprite {
     public Crosshair(SpriteComponent sc) {
         super(sc);
         setPicture(drawCrosshair());
+        setDrawingPriority(10);
     }
 
     private static Picture drawCrosshair() {

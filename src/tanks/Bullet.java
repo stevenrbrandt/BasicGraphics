@@ -6,11 +6,14 @@ import basicgraphics.images.Picture;
 import java.awt.*;
 
 public class Bullet extends Sprite {
-    private final boolean isFriendly;
 
-    public Bullet(SpriteComponent sc, Sprite progenitor, double direction, double velocity, boolean isFriendly) {
+    private final boolean isFriendly;
+    private final Tank progenitor;
+
+    public Bullet(SpriteComponent sc, Tank progenitor, double direction, double velocity, boolean isFriendly) {
         super(sc);
         this.isFriendly = isFriendly;
+        this.progenitor = progenitor;
 
         setPicture(drawBullet());
         setDrawingPriority(-3); // Draw under the tanks
@@ -43,5 +46,9 @@ public class Bullet extends Sprite {
 
     public boolean isFriendly() {
         return isFriendly;
+    }
+
+    public Tank getProgenitor() {
+        return progenitor;
     }
 }

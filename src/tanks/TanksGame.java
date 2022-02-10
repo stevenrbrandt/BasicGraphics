@@ -1,6 +1,7 @@
 package tanks;
 
 import basicgraphics.*;
+import basicgraphics.sounds.ReusableClip;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,6 +24,9 @@ public class TanksGame {
     private final BasicFrame frame = new BasicFrame("Tanks Tanks Tanks Tanks!");
 
     private final Random random = new Random();
+
+    public static final ReusableClip boom = new ReusableClip("tanks/boom.wav");
+    public static final ReusableClip shot = new ReusableClip("tanks/shot.wav");
 
     public void updateHeaders() {
         headers[1].setText("Score: " + player.getScore());
@@ -48,10 +52,6 @@ public class TanksGame {
         player.setY(400.);
 
         updateHeaders();
-
-        //var s4 = new EnemyTanks.SmartMobileBurstTank(sc);
-        //s4.setX(400);
-        //s4.setY(100);
 
         spawnWave();
 
@@ -94,11 +94,15 @@ public class TanksGame {
             if (tank instanceof PlayerTank) {
                 if (!bullet.isFriendly()) {
                     tank.setActive(false);
-                    JOptionPane.showMessageDialog(sc, "You're loser.\nFinal Score: " + player.getScore());
+                    boom.play();
+                    JOptionPane.showMessageDialog(sc, String.format("You're loser.\nFinal Score: %d\nYour conqueror: %s",
+                                                                    player.getScore(),
+                                                                    ((EnemyTank) bullet.getProgenitor()).getDisplayName()));
                     System.exit(0);
                 }
             } else if (bullet.isFriendly()) {
                 tank.setActive(false);
+                boom.play();
                 player.setAmmo(player.getAmmo() + 6);
                 player.setScore(player.getScore() + ((EnemyTank) tank).getScoreValue());
                 liveTanks--;
@@ -107,6 +111,7 @@ public class TanksGame {
 
         sc.addSpriteSpriteCollisionListener(PlayerTank.class, EnemyTank.class, (pt, et) -> {
             et.setActive(false);
+            boom.play();
             player.setAmmo(player.getAmmo() + 6);
             player.setScore(player.getScore() + et.getScoreValue());
             liveTanks--;
@@ -117,6 +122,7 @@ public class TanksGame {
             public void mousePressed(MouseEvent e) {
                 if (player.decrAmmo()) {
                     new Bullet(sc, player, player.getAimingDirection(), 3., true);
+                    shot.play();
                 }
             }
         });

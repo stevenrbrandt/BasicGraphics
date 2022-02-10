@@ -11,13 +11,15 @@ public abstract class EnemyTank extends Tank {
 
     private final Color color;
     private final int scoreValue;
+    private final String displayName;
 
     private long prevTime;
     private long stopWatch;
 
-    public EnemyTank(SpriteComponent sc, Color color, int scoreValue) {
+    public EnemyTank(SpriteComponent sc, Color color, int scoreValue, String displayName) {
         super(sc);
         this.color = color;
+        this.displayName = displayName;
         this.prevTime = System.currentTimeMillis();
         this.scoreValue = scoreValue;
 
@@ -57,6 +59,11 @@ public abstract class EnemyTank extends Tank {
         }
     }
 
+    void fireBullet(int v, double d) {
+        new Bullet(getSpriteComponent(), this, d, v, false);
+        //TanksGame.shot.play(); // broken -- everything plays one at a time
+    }
+
     @Override
     final public Color getColor() {
         return color;
@@ -64,5 +71,9 @@ public abstract class EnemyTank extends Tank {
 
     public int getScoreValue() {
         return scoreValue;
+    }
+
+    public String getDisplayName() {
+        return displayName;
     }
 }

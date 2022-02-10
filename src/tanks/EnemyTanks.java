@@ -18,9 +18,10 @@ public class EnemyTanks {
     @Target(ElementType.TYPE)
     @Retention(RetentionPolicy.RUNTIME)
     private @interface Weight {
-        int value();
+        int value() default 0;
     }
 
+    @SuppressWarnings("unchecked")
     private static final WeightedSet<Class<? extends EnemyTank>> tankClasses = new WeightedSet<>() {{
         var tanksClass = (Class<EnemyTanks>) getClass().getEnclosingClass();
 
@@ -39,7 +40,7 @@ public class EnemyTanks {
     public static class StupidTank extends EnemyTank {
 
         public StupidTank(SpriteComponent sc) {
-            super(sc, Color.ORANGE, 5);
+            super(sc, Color.ORANGE, 5, "Stationary Stupid Tank");
         }
 
         @Override
@@ -48,7 +49,7 @@ public class EnemyTanks {
             setAimingAtY(player.centerY());
 
             if (stopWatch > 1500) {
-                new Bullet(getSpriteComponent(), this, getAimingDirection(), 3, false);
+                fireBullet(3, getAimingDirection());
                 resetStopwatch();
             }
         }
@@ -58,7 +59,7 @@ public class EnemyTanks {
     public static class SmartTank extends EnemyTank {
 
         public SmartTank(SpriteComponent sc) {
-            super(sc, Color.RED, 10);
+            super(sc, Color.RED, 10, "Stationary Smart Tank");
         }
 
         @Override
@@ -82,7 +83,7 @@ public class EnemyTanks {
             }
 
             if (stopWatch > 1500) {
-                new Bullet(getSpriteComponent(), this, getAimingDirection(), 2, false);
+                fireBullet(2, getAimingDirection());
                 resetStopwatch();
             }
         }
@@ -95,7 +96,7 @@ public class EnemyTanks {
         private final Random r = new Random();
 
         public MobileStupidTank(SpriteComponent sc) {
-            super(sc, Color.ORANGE, 10);
+            super(sc, Color.ORANGE, 10, "Stupid Tank");
             setVelocity(1.5);
         }
 
@@ -118,7 +119,7 @@ public class EnemyTanks {
                     dHeading = r.nextBoolean() ? -0.05 : 0.05;
                     setVelocity(0);
                 } else {
-                    new Bullet(getSpriteComponent(), this, getAimingDirection(), 3, false);
+                    fireBullet(3, getAimingDirection());
                 }
             }
         }
@@ -131,7 +132,7 @@ public class EnemyTanks {
         private final Random r = new Random();
 
         public CrazyTank(SpriteComponent sc) {
-            super(sc, new Color(23, 91, 1), 50);
+            super(sc, new Color(23, 91, 1), 50, "Crazy Tank");
             setVelocity(1.5);
         }
 
@@ -155,7 +156,7 @@ public class EnemyTanks {
                     setVelocity(0);
                 } else {
                     var deviation = r.nextDouble(0.1) - 0.05;
-                    new Bullet(getSpriteComponent(), this, getAimingDirection() + deviation, 3, false);
+                    fireBullet(3, getAimingDirection() + deviation);
                 }
             }
         }
@@ -177,7 +178,7 @@ public class EnemyTanks {
         }
 
         public MobileBurstTank(SpriteComponent sc) {
-            super(sc, new Color(23, 91, 1), 20);
+            super(sc, new Color(23, 91, 1), 20, "Burstfire Tank");
             setVelocity(1.5);
         }
 
@@ -202,7 +203,7 @@ public class EnemyTanks {
                         --shotsLeft;
                         shotTimer = 0;
                         var deviation = r.nextDouble(0.1) - 0.05;
-                        new Bullet(getSpriteComponent(), this, getAimingDirection() + deviation, 3, false);
+                        fireBullet(3, getAimingDirection() + deviation);
                     }
                     break;
                 case TURNING:
@@ -235,7 +236,7 @@ public class EnemyTanks {
         }
 
         public SmartMobileBurstTank(SpriteComponent sc) {
-            super(sc, new Color(41, 148, 4), 30);
+            super(sc, new Color(41, 148, 4), 30, "Smart Burstfire Tank");
             setVelocity(1.5);
         }
 
@@ -275,7 +276,7 @@ public class EnemyTanks {
                         --shotsLeft;
                         shotTimer = 0;
                         var deviation = r.nextDouble(0.1) - 0.05;
-                        new Bullet(getSpriteComponent(), this, getAimingDirection() + deviation, 3, false);
+                        fireBullet(3, getAimingDirection() + deviation);
                     }
                     break;
                 case TURNING:
