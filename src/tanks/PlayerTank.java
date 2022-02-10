@@ -12,7 +12,7 @@ public class PlayerTank extends Tank {
     public PlayerTank(SpriteComponent sc, int initialAmmo) {
         super(sc);
         this.ammo = initialAmmo;
-        setVelocity(1.3); // choo choo
+        setVelocity(1.6); // choo choo
     }
 
     @Override

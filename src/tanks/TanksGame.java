@@ -6,6 +6,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Random;
 
 import static java.awt.event.KeyEvent.*;
 
@@ -14,13 +15,14 @@ public class TanksGame {
     public static final Dimension MAIN_GAME_SIZE = new Dimension(900, 900);
 
     public static Point mousePosition = new Point(0, 0);
+    static PlayerTank player;
+    private static int liveTanks;
 
     private SpriteComponent sc;
     private final JLabel[] headers = new JLabel[] { new JLabel("Tanks!"), new JLabel("Score: X"), new JLabel("Ammo: X") };
-
     private final BasicFrame frame = new BasicFrame("Tanks Tanks Tanks Tanks!");
 
-    static PlayerTank player;
+    private final Random random = new Random();
 
     public void updateHeaders() {
         headers[1].setText("Score: " + player.getScore());
@@ -47,21 +49,11 @@ public class TanksGame {
 
         updateHeaders();
 
-        //var s1 = new EnemyTanks.SmartTank(sc);
-        //s1.setX(400);
-        //s1.setY(100);
-//
-        //var s2 = new EnemyTanks.CrazyTank(sc);
-        //s2.setX(200);
-        //s2.setY(100);
-//
-        //var s3 = new EnemyTanks.CrazyTank(sc);
-        //s3.setX(600);
-        //s3.setY(100);
+        //var s4 = new EnemyTanks.SmartMobileBurstTank(sc);
+        //s4.setX(400);
+        //s4.setY(100);
 
-        var s4 = new EnemyTanks.SmartMobileBurstTank(sc);
-        s4.setX(400);
-        s4.setY(100);
+        spawnWave();
 
         var crosshair = new Crosshair(sc);
 
@@ -90,6 +82,11 @@ public class TanksGame {
 
             player.draw();
             player.updateVelocity();
+
+            if (liveTanks == 0) {
+                spawnWave();
+            }
+
             updateHeaders();
         });
 
@@ -104,7 +101,15 @@ public class TanksGame {
                 tank.setActive(false);
                 player.setAmmo(player.getAmmo() + 6);
                 player.setScore(player.getScore() + ((EnemyTank) tank).getScoreValue());
+                liveTanks--;
             }
+        });
+
+        sc.addSpriteSpriteCollisionListener(PlayerTank.class, EnemyTank.class, (pt, et) -> {
+            et.setActive(false);
+            player.setAmmo(player.getAmmo() + 6);
+            player.setScore(player.getScore() + et.getScoreValue());
+            liveTanks--;
         });
 
         sc.addMouseListener(new MouseAdapter() {
@@ -115,6 +120,18 @@ public class TanksGame {
                 }
             }
         });
+    }
+
+    private void spawnWave() {
+        var n = random.nextInt(2) + 2;
+
+        for (int i = 0; i < n; i++) {
+            var t = EnemyTanks.randomTank(sc);
+            assert t != null;
+            t.setX(random.nextInt(800));
+            t.setY(random.nextInt(800));
+            liveTanks++;
+        }
     }
 
     private static void addTask(Runnable r) {

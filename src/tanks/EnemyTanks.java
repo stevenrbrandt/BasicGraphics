@@ -3,6 +3,11 @@ package tanks;
 import basicgraphics.SpriteComponent;
 
 import java.awt.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+import java.util.Arrays;
 import java.util.Random;
 
 import static tanks.TanksGame.*;
@@ -10,7 +15,28 @@ import static tanks.TanksGame.*;
 public class EnemyTanks {
     private EnemyTanks() { }
 
-    static class StupidTank extends EnemyTank {
+    @Target(ElementType.TYPE)
+    @Retention(RetentionPolicy.RUNTIME)
+    private @interface Weight {
+        int value();
+    }
+
+    private static final WeightedSet<Class<? extends EnemyTank>> tankClasses = new WeightedSet<>() {{
+        var tanksClass = (Class<EnemyTanks>) getClass().getEnclosingClass();
+
+        Arrays.stream(tanksClass.getClasses()).filter(EnemyTank.class::isAssignableFrom).forEach(clazz -> {
+            add((Class<? extends EnemyTank>) clazz, clazz.getAnnotation(Weight.class).value());
+        });
+    }};
+
+    public static Tank randomTank(SpriteComponent sc) {
+        try {
+            return tankClasses.getRandom().getConstructor(SpriteComponent.class).newInstance(sc);
+        } catch (ReflectiveOperationException ignored) { return null; }
+    }
+
+    @Weight(10)
+    public static class StupidTank extends EnemyTank {
 
         public StupidTank(SpriteComponent sc) {
             super(sc, Color.ORANGE, 5);
@@ -28,7 +54,8 @@ public class EnemyTanks {
         }
     }
 
-    static class SmartTank extends EnemyTank {
+    @Weight(8)
+    public static class SmartTank extends EnemyTank {
 
         public SmartTank(SpriteComponent sc) {
             super(sc, Color.RED, 10);
@@ -61,7 +88,8 @@ public class EnemyTanks {
         }
     }
 
-    static class MobileStupidTank extends EnemyTank {
+    @Weight(8)
+    public static class MobileStupidTank extends EnemyTank {
 
         private double dHeading;
         private final Random r = new Random();
@@ -96,7 +124,8 @@ public class EnemyTanks {
         }
     }
 
-    static class CrazyTank extends EnemyTank {
+    @Weight(5)
+    public static class CrazyTank extends EnemyTank {
 
         private double dHeading;
         private final Random r = new Random();
@@ -132,7 +161,8 @@ public class EnemyTanks {
         }
     }
 
-    static class MobileBurstTank extends EnemyTank {
+    @Weight(8)
+    public static class MobileBurstTank extends EnemyTank {
 
         private int shotsLeft = 6;
         private long shotTimer, roamTimer;
@@ -189,7 +219,8 @@ public class EnemyTanks {
         }
     }
 
-    static class SmartMobileBurstTank extends EnemyTank {
+    @Weight(7)
+    public static class SmartMobileBurstTank extends EnemyTank {
 
         private int shotsLeft = 6;
         private long shotTimer, roamTimer;
