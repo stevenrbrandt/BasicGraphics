@@ -7,6 +7,9 @@ import basicgraphics.images.Picture;
 
 import java.awt.*;
 
+/**
+ * @author Max Morris
+ */
 public abstract class Tank extends Sprite {
 
     private double aimingAtX, aimingAtY;

@@ -3,6 +3,9 @@ package tanks;
 import java.util.Random;
 import java.util.TreeMap;
 
+/**
+ * @author Max Morris
+ */
 public class WeightedSet<T> {
     private final TreeMap<Integer, T> elements = new TreeMap<>();
     private final Random random = new Random();

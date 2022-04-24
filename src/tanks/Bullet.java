@@ -5,6 +5,9 @@ import basicgraphics.images.Picture;
 
 import java.awt.*;
 
+/**
+ * @author Max Morris
+ */
 public class Bullet extends Sprite {
 
     private final boolean isFriendly;
