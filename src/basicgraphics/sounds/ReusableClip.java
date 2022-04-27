@@ -4,6 +4,8 @@ import basicgraphics.BasicFrame;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.LinkedList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 
@@ -25,7 +27,13 @@ public final class ReusableClip {
     static boolean running = false;
     static LinkedList<ReusableClip> queue = new LinkedList<>();
     public static boolean verbose = false;
-    
+
+    static ExecutorService overlappingSoundPool = Executors.newCachedThreadPool(r -> {
+        Thread t = Executors.defaultThreadFactory().newThread(r);
+        t.setDaemon(true);
+        return t;
+    });
+
     static {
         thread = new Thread(()->{});
         thread.start();
@@ -112,6 +120,10 @@ public final class ReusableClip {
         sourceLine.flush();
     }
 
+    public void playOverlapping() {
+        overlappingSoundPool.submit(this::playNow);
+    }
+
     public synchronized void play() {
         looping = false;
         enqueue(this);
@@ -125,6 +137,11 @@ public final class ReusableClip {
 
     public void stop() {
         looping = false;
+    }
+
+    public static void testOverlapping(ReusableClip clip1, ReusableClip clip2) {
+        clip1.playOverlapping();
+        clip2.playOverlapping();
     }
 
     public static void main(String[] args) throws Exception {
@@ -142,6 +159,8 @@ public final class ReusableClip {
         clip2.stop();
         long t2 = System.currentTimeMillis();
         System.out.printf("time=%d%n",(t2-t1));
+        Thread.sleep(5000);
+        testOverlapping(clip1, clip2);
         bf.dispose();
     }
 }
