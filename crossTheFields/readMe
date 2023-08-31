@@ -1,0 +1,32 @@
+
+Paul Yeon
+Final Project Documentation
+
+My project is called “Cross the Fields.” To run it, simply run the “Main.java” file, then start the game by pressing the button on the title screen. 
+You can load any level of the game you wish (except the first) using the load option at the top of the window. 
+
+"These monsters are everywhere! How will I ever get back?"
+Your character is a black dot, “Soldier,” who starts at the left of the screen at the start of every level. 
+You can move him around by using WASD keys, including moving diagonally by pressing two buttons at once. 
+If you click somewhere, Soldier will shoot exactly at that location, allowing for precise shooting.
+He wields a semiautomatic rifle and will shoot every time you click. Any enemy will die immediately with one shot.
+
+"Grr!"
+The blue triangles with red lines are “Drillhounds,” or TriangleEnemy in the java documentation. 
+They will always charge directly at the Soldier, even bashing against walls in their attempt to do so.
+Don’t let down your guard, because they can kill Soldier instantly and can sometimes drill their way through the walls.
+*There are PINK variants which move much faster.*
+
+"Pew pew!"
+The yellow triangles are “Turrets,” or SquareEnemy in the java. 
+They will shoot at the soldier, though they don’t move. 
+You can dodge their bullets if you’re fast enough.
+*There are ORANGE variants which shoot wall-piercing bullets.*
+
+"(Thorns bristling with malicious intent)"
+The green circles are “Cactimpalers,” or CircleEnemy in the java.
+They serve as deadly obstacles, and your enemies can shoot through them. 
+If enemies are behind a cactus, you need to shoot the cactimpaler first.
+*There are GRAY variants which will explode and kill you if you approach within a circle's length of them, and cannot be shot*
+
+To complete a level, you need to cross the screen and reach the path toward Soldier's home at the other side. 
