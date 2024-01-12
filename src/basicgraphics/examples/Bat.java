@@ -20,24 +20,23 @@ public class Bat extends Sprite {
     public Bat(SpriteComponent sc) {
         super(sc);
         setPicture(new Picture("bat.png"));
-        setVelX(1);
-        setVelY(1);
+        setVel(1, 1);
     }
 
     @Override
     public void processEvent(SpriteCollisionEvent ce) {
         if (ce.eventType == CollisionEventType.WALL) {
             if (ce.xlo) {
-                setVelX(Math.abs(getVelX()));
+                setVel(Math.abs(getVelX()), getVelY());
             }
             if (ce.xhi) {
-                setVelX(-Math.abs(getVelX()));
+                setVel(-Math.abs(getVelX()), getVelY());
             }
             if (ce.ylo) {
-                setVelY(Math.abs(getVelY()));
+                setVel(getVelX(), Math.abs(getVelY()));
             }
             if (ce.yhi) {
-                setVelY(-Math.abs(getVelY()));
+                setVel(getVelX(), -Math.abs(getVelY()));
             }
         }
     }

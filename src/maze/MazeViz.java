@@ -6,7 +6,7 @@
 package maze;
 
 import basicgraphics.BasicFrame;
-import basicgraphics.Clock;
+import basicgraphics.ClockWorker;
 import basicgraphics.SpriteComponent;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -89,8 +89,8 @@ public class MazeViz {
             }
         });
         bf.jf.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        Clock.start(10);
-        Clock.addTask(jp.moveSprites());
+        ClockWorker.initialize(10);
+        ClockWorker.addTask(jp.moveSprites());
         bf.show();
     }
 }

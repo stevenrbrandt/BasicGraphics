@@ -7,7 +7,7 @@ package basicflyer;
 
 import basicgraphics.BasicContainer;
 import basicgraphics.BasicFrame;
-import basicgraphics.Clock;
+import basicgraphics.ClockWorker;
 import basicgraphics.SpriteComponent;
 import basicgraphics.sounds.ReusableClip;
 import java.awt.CardLayout;
@@ -77,7 +77,7 @@ public class Flyer {
                 bc2.requestFocus();
                 
                 // Start the timer
-                Clock.start(10);
+                ClockWorker.initialize(5);
             }
         });
         bc1.add("Button",jstart);
@@ -99,14 +99,13 @@ public class Flyer {
                     f.turn(-INCR);
                 } else if(ke.getKeyChar() == ' ') {
                     Plasma pl = new Plasma(sc);
-                    pl.setVelX(f.getVelX()*2);
-                    pl.setVelY(f.getVelY()*2);
+                    pl.setVel(f.getVelX()*2, f.getVelY()*2);
                     pl.setCenterX(f.centerX());
                     pl.setCenterY(f.centerY());
                     clip.play();
                 }
             }
         });
-        Clock.addTask(sc.moveSprites());
+        ClockWorker.addTask(sc.moveSprites());
     }
 }

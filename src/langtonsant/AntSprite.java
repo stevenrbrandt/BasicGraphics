@@ -5,7 +5,7 @@
  */
 package langtonsant;
 
-import basicgraphics.Clock;
+import basicgraphics.ClockWorker;
 import basicgraphics.Sprite;
 import basicgraphics.SpriteComponent;
 import basicgraphics.Task;
@@ -24,7 +24,7 @@ class AntSprite extends Sprite {
         pic = new Picture("ant-small.png");
         setPicture(pic);
         this.grid = grid;
-        Clock.addTask(new Task() {
+        ClockWorker.addTask(new Task() {
             @Override
             public void run() {
                 doMove();
@@ -48,7 +48,7 @@ class AntSprite extends Sprite {
         } else {
             facing -= 1;
         }
-        setPicture(pic.rotate(Math.PI*0.5*facing));
+        rotate(Math.PI*0.5*facing);
         grid[i][j] = !grid[i][j];
         int facingx = (int)Math.round(Math.cos(Math.PI*facing/2));
         int facingy = (int)Math.round(Math.sin(Math.PI*facing/2));

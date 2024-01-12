@@ -1,7 +1,7 @@
 package lightsout;
 
 import basicgraphics.BasicFrame;
-import basicgraphics.Clock;
+import basicgraphics.ClockWorker;
 import basicgraphics.SpriteComponent;
 
 import javax.swing.*;
@@ -39,8 +39,8 @@ public class LightsOutGame {
         generateProblem();
 
         frame.show();
-        Clock.start(1);
-        Clock.addTask(sc.moveSprites());
+        ClockWorker.initialize(1);
+        ClockWorker.addTask(sc.moveSprites());
     }
 
     // Generating the board with a sequence of toggleWithNeighbors guarantees the board is solvable

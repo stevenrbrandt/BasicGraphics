@@ -6,7 +6,7 @@
 package basicshooter;
 
 import basicgraphics.BasicFrame;
-import basicgraphics.Clock;
+import basicgraphics.ClockWorker;
 import basicgraphics.Sprite;
 import basicgraphics.SpriteComponent;
 import basicgraphics.SpriteSpriteCollisionListener;
@@ -121,8 +121,8 @@ public class Game {
         });
         
         bf.show();
-        Clock.start(10);
-        Clock.addTask(sc.moveSprites());
+        ClockWorker.initialize(10);
+        ClockWorker.addTask(sc.moveSprites());
     }
     
     public static void main(String[] args) {

@@ -9,9 +9,12 @@ import basicgraphics.images.Picture;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -21,6 +24,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import javax.swing.JComponent;
 
 /**
@@ -29,7 +33,7 @@ import javax.swing.JComponent;
  */
 public class SpriteComponent extends JComponent implements MouseListener {
 
-    private final List<Sprite> sprites = new ArrayList<>();
+    private final Set<Sprite> sprites = new TreeSet<>();
     
     int offsetX=0, offsetY=0;
 
@@ -56,15 +60,29 @@ public class SpriteComponent extends JComponent implements MouseListener {
     public int getOffsetX() { return offsetX; }
     public void setOffsetY(int y) { offsetY = y; }
     public int getOffsetY() { return offsetY; }
+    
+    boolean drawBox = false;
+    public boolean setDrawBox(boolean b) {
+        boolean oldValue = drawBox;
+        drawBox = b;
+        return oldValue;
+    }
 
-    public final void paintSprites(Graphics g) {
-        Collections.sort(sprites, DRAWING_PRIORITY);
+    public final void paintSprites(Graphics g_) {
+        Graphics2D g = (Graphics2D)g_;
+        //Collections.sort(sprites, DRAWING_PRIORITY);
         for (Sprite sprite : new ArrayList<>(sprites)) {
             if(!sprite.is_visible)
                 continue;
-            int xv = (int) (sprite.getX()) + offsetX;
-            int yv = (int) (sprite.getY()) + offsetY;
-            g.drawImage(sprite.getPicture().getImage(), xv, yv, null);
+            AffineTransform at = sprite.getTransform();
+            g.drawImage(sprite.getPicture().getImage(), at, null);
+            if(drawBox) {
+                g.setTransform(at);
+                g.setColor(Color.black);
+                int w = (int) sprite.getWidth();
+                int h = (int) sprite.getHeight();
+                g.draw(new Rectangle(2, 2, w - 1, h - 1));
+            }
         }
     }
     

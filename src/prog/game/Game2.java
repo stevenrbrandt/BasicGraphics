@@ -33,25 +33,25 @@ public class Game2 {
 
     private static Number mul(Number n1, Number n2) {
         if (bothint(n1, n2)) {
-            return new Integer(n1.intValue() * n2.intValue());
+            return n1.intValue() * n2.intValue();
         } else {
-            return new Double(n1.doubleValue() * n2.doubleValue());
+            return n1.doubleValue() * n2.doubleValue();
         }
     }
 
     private static Number add(Number n1, Number n2) {
         if (bothint(n1, n2)) {
-            return new Integer(n1.intValue() + n2.intValue());
+            return n1.intValue() + n2.intValue();
         } else {
-            return new Double(n1.doubleValue() + n2.doubleValue());
+            return n1.doubleValue() + n2.doubleValue();
         }
     }
     
     private static Number sub(Number n1,Number n2) {
         if (bothint(n1, n2)) {
-            return new Integer(n1.intValue() - n2.intValue());
+            return n1.intValue() - n2.intValue();
         } else {
-            return new Double(n1.doubleValue() - n2.doubleValue());
+            return n1.doubleValue() - n2.doubleValue();
         }
     }
 
@@ -271,7 +271,7 @@ public class Game2 {
             }
             return value;
         } else if ("num".equals(n)) {
-            return new Integer(gr.substring());
+            return Integer.valueOf(gr.substring());
         } else if ("addend".equals(n)) {
             Number n1 = neval(gr.group(0));
             for (int i = 2; i < gr.groupCount(); i += 2) {

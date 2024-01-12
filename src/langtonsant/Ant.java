@@ -6,7 +6,7 @@
 package langtonsant;
 
 import basicgraphics.BasicFrame;
-import basicgraphics.Clock;
+import basicgraphics.ClockWorker;
 import basicgraphics.SpriteComponent;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -52,8 +52,8 @@ public class Ant {
         bf.setStringLayout(layout);
         bf.add("C", sc);
         sc.setPreferredSize(new Dimension(PIXELS_X,PIXELS_Y));
-        Clock.addTask(sc.moveSprites());
-        Clock.start(SPEED);
+        ClockWorker.addTask(sc.moveSprites());
+        ClockWorker.initialize(SPEED);
         bf.show();
     }
 }

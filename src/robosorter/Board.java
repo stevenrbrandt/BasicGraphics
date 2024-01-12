@@ -51,13 +51,13 @@ public class Board {
                 m.count = Math.max(Math.abs(delx),Math.abs(dely))*Robo.BLOCK_SIZE / Robo.SPEED;
 //                System.out.printf("count=%d%n", m.count);
                 if (delx < 0) {
-                    sp.setVelX(-Robo.SPEED);
+                    sp.setVel(-Robo.SPEED, sp.getVelY());
                     if(carry != null)
-                        carry.setVelX(-Robo.SPEED);
+                        carry.setVel(-Robo.SPEED, sp.getVelY());
                 } else if (delx > 0) {
-                    sp.setVelX(Robo.SPEED);
+                    sp.setVel(Robo.SPEED, sp.getVelY());
                     if(carry != null)
-                        carry.setVelX(Robo.SPEED);
+                        carry.setVel(Robo.SPEED, carry.getVelY());
                 } else if (dely < 0) {
                     sp.setVelY(-Robo.SPEED);
                     if(carry != null)
@@ -72,11 +72,9 @@ public class Board {
         });
         m.actions.add(new Runnable() {
             public void run() {
-                sp.setVelX(0);
-                sp.setVelY(0);
+                sp.setVel(0,0);
                 if(carry != null) {
-                    carry.setVelX(0);
-                    carry.setVelY(0);
+                    carry.setVel(0,0);
                 }
             }
         });

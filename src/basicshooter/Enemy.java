@@ -44,8 +44,7 @@ public class Enemy extends Sprite {
             }
         }
         // A random speed
-        setVelX(2 * Game.RAND.nextDouble() - 1);
-        setVelY(2 * Game.RAND.nextDouble() - 1);
+        setVel(2 * Game.RAND.nextDouble() - 1, 2 * Game.RAND.nextDouble());
     }
     
     final static ReusableClip clip = new ReusableClip("die.wav");

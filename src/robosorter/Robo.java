@@ -6,7 +6,7 @@
 package robosorter;
 
 import basicgraphics.BasicFrame;
-import basicgraphics.Clock;
+import basicgraphics.ClockWorker;
 import basicgraphics.SpriteComponent;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -47,7 +47,7 @@ public class Robo {
         }
         Mover mv = new Mover(sc,board);
         bf.show();
-        Clock.start(20);
+        ClockWorker.initialize(20);
         board.m = mv;
         new EggSorter().sort(mv,board);
     }

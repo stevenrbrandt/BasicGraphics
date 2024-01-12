@@ -9,6 +9,7 @@ import basicgraphics.images.Picture;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.geom.AffineTransform;
 import java.util.LinkedList;
 
 /**
@@ -18,10 +19,11 @@ import java.util.LinkedList;
  * to react to collisions.
  * @author sbrandt
  */
-public class Sprite implements MouseListener {
+public class Sprite implements MouseListener, Comparable<Sprite> {
     
     private SpriteComponent component;
     private boolean added = false;
+    private double headingOffset=0, heading=0;
     
     private Sprite() {}
     public Sprite(SpriteComponent sc) {
@@ -133,10 +135,33 @@ public class Sprite implements MouseListener {
     public void setX(double x) { this.x = x; }
     public void setCenterX(double x) { this.x = x - getWidth()/2; }
     public void setCenterY(double y) { this.y = y - getHeight()/2; }
+    public double getCenterX() { return x + getWidth()/2; }
+    public double getCenterY() { return y + getHeight()/2; }
+    
     public double getX() { return x; }
     public void setY(double y) { this.y = y; }
     public double getY() { return y; }
-    public void setVelX(double velx) { this.velx = velx; }
+    public void setHeadingOffset(double h) {
+        heading = heading + headingOffset - this.headingOffset;
+        headingOffset = h;
+    }
+    public double getHeading() { return heading; }
+    public double getSpeed() {
+        return Math.sqrt(velx*velx+vely*vely);
+    }
+    public void rotate(double th) {
+        heading += th;
+        double sp = getSpeed();
+        setVel(sp*Math.cos(heading),sp*Math.sin(heading));
+    }
+    public double getHeadingOffset() { return headingOffset; }
+    public void setVel(double velx, double vely) {
+        this.velx = velx;
+        this.vely = vely;
+        if(velx != 0 || vely != 0) {
+            this.heading = Math.atan2(vely,velx);
+        }
+    }
     public double getVelX() { return velx; }
     public void setVelY(double vely) { this.vely = vely; }
     public double getVelY() { return vely; }
@@ -237,8 +262,7 @@ public class Sprite implements MouseListener {
         double xv = getX(), yv = getY();
         double delx = moveToX-xv, dely = moveToY-yv;
         double theta = Math.atan2(dely, delx);
-        setVelX(speed * Math.cos(theta));
-        setVelY(speed * Math.sin(theta));
+        setVel(speed * Math.cos(theta), speed * Math.sin(theta));
         assert speed > 0;
     }
     public boolean moveToEnabled() {
@@ -255,8 +279,7 @@ public class Sprite implements MouseListener {
             if(r < moveToSpeed*2) {
                 setX(moveToX);
                 setY(moveToY);
-                setVelX(0);
-                setVelY(0);
+                setVel(0,0);
                 moveToEnabled = false;
                 arrived();
             } else {
@@ -302,5 +325,20 @@ public class Sprite implements MouseListener {
                 }
             }
         }
+    }
+
+    @Override
+    public int compareTo(Sprite that) {
+        int r = this.drawingPriority - that.drawingPriority;
+        if(r == 0)
+            r = System.identityHashCode(this) - System.identityHashCode(that);
+        return r;
+    }
+
+    AffineTransform getTransform() {
+        AffineTransform af = new AffineTransform();
+        af.translate(getX(),getY());
+        af.rotate(heading+headingOffset, getWidth()/2, getHeight()/2);
+        return af;
     }
 }

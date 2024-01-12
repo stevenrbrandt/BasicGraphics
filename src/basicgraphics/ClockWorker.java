@@ -16,11 +16,10 @@ import javax.swing.SwingUtilities;
  *
  * @author sbrandt
  */
-public class Clock {
+public class ClockWorker {
 
     private static Timer t = null;
     private static List<Task> newTasks = new ArrayList<>();
-    private static List<Task> runningTasks = new ArrayList<>();
 
     public static void addTask(Task task) {
         if (task.isSubmitted()) {
@@ -28,19 +27,15 @@ public class Clock {
         }
         task.setSubmitted();
         synchronized (newTasks) {
-            boolean empty = newTasks.isEmpty();
             newTasks.add(task);
-            if (empty) {
-                newTasks.notifyAll();
-            }
         }
     }
 
-    public static void stop() {
+    public static void finish() {
         t.cancel();
     }
 
-    public static void start(int period) {
+    public static void initialize(int period) {
         if (t != null) {
 //            throw new GuiException("SpriteComponent already started");
             t.cancel();
@@ -55,15 +50,10 @@ public class Clock {
                     @Override
                     public void run() {
                         synchronized (newTasks) {
-                            while (newTasks.isEmpty() && runningTasks.isEmpty()) {
-                                try {
-                                    newTasks.wait();
-                                } catch (InterruptedException ex) {
-                                }
+                            if(newTasks.isEmpty()) {
+                                return;
                             }
-                            runningTasks.addAll(newTasks);
-                            newTasks.clear();
-                            Iterator<Task> iter = runningTasks.iterator();
+                            Iterator<Task> iter = newTasks.iterator();
                             while (iter.hasNext()) {
                                 Task t = iter.next();
                                 t.run_();

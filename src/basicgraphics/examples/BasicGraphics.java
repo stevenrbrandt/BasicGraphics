@@ -6,7 +6,7 @@
 package basicgraphics.examples;
 
 import basicgraphics.BasicFrame;
-import basicgraphics.Clock;
+import basicgraphics.ClockWorker;
 import basicgraphics.CollisionEventType;
 import basicgraphics.Sprite;
 import basicgraphics.SpriteCollisionEvent;
@@ -75,8 +75,7 @@ public class BasicGraphics {
             setPicture(orangeBall);
             if(dead) {
                 dead = false;
-                setVelX(getVelX()*2);
-                setVelY(getVelY()*2);
+                setVel(getVelX()*2, getVelY()*2);
             }
         }
 
@@ -84,16 +83,16 @@ public class BasicGraphics {
         public void processEvent(SpriteCollisionEvent ce) {
             if (ce.eventType == CollisionEventType.WALL) {
                 if (ce.xlo) {
-                    setVelX(Math.abs(getVelX()));
+                    setVel(Math.abs(getVelX()), getVelY());
                 }
                 if (ce.xhi) {
-                    setVelX(-Math.abs(getVelX()));
+                    setVel(-Math.abs(getVelX()), getVelY());
                 }
                 if (ce.ylo) {
-                    setVelY(Math.abs(getVelY()));
+                    setVel(getVelX(), Math.abs(getVelY()));
                 }
                 if (ce.yhi) {
-                    setVelY(-Math.abs(getVelY()));
+                    setVel(getVelX(), -Math.abs(getVelY()));
                 }
             }
         }
@@ -179,8 +178,7 @@ public class BasicGraphics {
             } else {
                 sball.setPicture(greenBall);
             }
-            sball.setVelX(2 * rand.nextDouble() - 1);
-            sball.setVelY(2 * rand.nextDouble() - 1);
+            sball.setVel(2 * rand.nextDouble() - 1, 2 * rand.nextDouble() -1);
             sball.setX(rand.nextInt(d.width));
             sball.setY(rand.nextInt(d.height));
         }
@@ -190,10 +188,8 @@ public class BasicGraphics {
             public void collision(Ball sp1, Ball sp2) {
                 double vx = sp1.getVelX();
                 double vy = sp1.getVelY();
-                sp1.setVelX(sp2.getVelX());
-                sp1.setVelY(sp2.getVelY());
-                sp2.setVelX(vx);
-                sp2.setVelY(vy);
+                sp1.setVel(sp2.getVelX(), sp2.getVelY());
+                sp2.setVel(vx, vy);
             }
         });
         sc.addSpriteSpriteCollisionListener(Ball.class, Bat.class, new SpriteSpriteCollisionListener<Ball, Bat>() {
@@ -201,10 +197,9 @@ public class BasicGraphics {
             public void collision(Ball sp1, Bat sp2) {
                 if(sp1.dead) return;
                 sp1.dead = true;
-                sp1.setVelX(sp1.getVelX()/2);
-                sp1.setVelY(sp1.getVelY()/2);
+                sp1.setVel(sp1.getVelX()/2, sp1.getVelY()/2);
                 sp1.setPicture(blueBall);
-                Clock.addTask(new Task(DIE_AFTER) {
+                ClockWorker.addTask(new Task(DIE_AFTER) {
                     public void run() {
                         if (iteration() == DIE_AFTER) {
                             if(sp1.dead) sp1.setActive(false);
@@ -215,8 +210,8 @@ public class BasicGraphics {
             }
         });
 
-        Clock.start(20);
-        Clock.addTask(sc.moveSprites());
+        ClockWorker.initialize(20);
+        ClockWorker.addTask(sc.moveSprites());
 
         f.add("row3", sc);
         f.show();

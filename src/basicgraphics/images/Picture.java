@@ -222,27 +222,6 @@ public class Picture extends JComponent {
         return height;
     }
     
-    /**
-     * Create a new copy of the picture
-     * object that's rotated by the specified
-     * angle (measured in radians).
-     * @param angle
-     * @return 
-     */
-    public Picture rotate(double angle) {
-        int w = image.getWidth();
-        int h = image.getHeight();
-        BufferedImage bi = BasicFrame.createImage(w,h);
-        Graphics2D g2 = (Graphics2D)bi.getGraphics();
-        double tx = w/2;
-        double ty = h/2;
-        g2.translate(tx,ty);
-        g2.rotate(angle);
-        g2.translate(-tx,-ty);
-        g2.drawImage(image, 0, 0, this);
-        return new Picture(bi);
-    }
-    
     public Picture resize(double factor) {
         int w = (int) (image.getWidth()*factor);
         int h = (int) (image.getHeight()*factor);
@@ -259,9 +238,15 @@ public class Picture extends JComponent {
         int h = image.getHeight();
         BufferedImage bi = BasicFrame.createImage(w,h);
         Graphics2D g2 = (Graphics2D)bi.getGraphics();
-        AffineTransform xform = new AffineTransform();
-        xform.setToScale(-1, 1);
-        g2.drawImage(image, xform, this);
+        g2.drawImage(image, w, 0, -w, h, null);
+        return new Picture(bi);
+    }
+    public Picture flipUpDown() {
+        int w = image.getWidth();
+        int h = image.getHeight();
+        BufferedImage bi = BasicFrame.createImage(w,h);
+        Graphics2D g2 = (Graphics2D)bi.getGraphics();
+        g2.drawImage(image, 0, h, w, -h, null);
         return new Picture(bi);
     }
     

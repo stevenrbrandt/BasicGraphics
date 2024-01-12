@@ -21,13 +21,13 @@ class Bullet extends Sprite {
         setCenterX(sp.centerX());
         setCenterY(sp.centerY());
         if(direction == KeyEvent.VK_DOWN)
-            setVelY(2.0);
+            setVel(0, 2.0);
         else if(direction == KeyEvent.VK_UP)
-            setVelY(-2.0);
+            setVel(0, -2.0);
         else if(direction == KeyEvent.VK_RIGHT)
-            setVelX(2.0);
+            setVel(2.0, 0);
         else if(direction == KeyEvent.VK_LEFT)
-            setVelX(-2.0);
+            setVel(-2.0, 0);
     }
 
     Bullet(SpriteComponent sc, Shooter sp, int x, int y) {
@@ -38,7 +38,6 @@ class Bullet extends Sprite {
         double delx = x-sp.getX()-sp.getWidth()/2;
         double dely = y-sp.getY()-sp.getHeight()/2;
         double dist = Math.sqrt(delx*delx+dely*dely);
-        setVelX(2*delx/dist);
-        setVelY(2*dely/dist);
+        setVel(2*delx/dist,2*dely/dist);
     }
 }

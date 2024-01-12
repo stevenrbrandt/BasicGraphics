@@ -7,7 +7,7 @@ package beowulf.dragons;
 
 import basicgraphics.BasicContainer;
 import basicgraphics.BasicFrame;
-import basicgraphics.Clock;
+import basicgraphics.ClockWorker;
 import basicgraphics.Sprite;
 import basicgraphics.SpriteComponent;
 import basicgraphics.Task;
@@ -96,7 +96,7 @@ public class Main {
             } else if(c.cmd.equals("move")) {
                 DragonSprite sp = sprites.get(c.id-1);
                 double angle = Math.atan2(c.y,c.x)+Math.PI/2;
-                sp.setPicture(sp.master.rotate(angle));
+                sp.rotate(angle);
             } else if(c.cmd.equals("fire")) {
                 DragonSprite sp = sprites.get(c.id-1);
                 flameSprite = new Sprite(sc) {
@@ -106,8 +106,8 @@ public class Main {
                     }
                 };
                 double angle = Math.atan2(c.y,c.x)+Math.PI/2;
-                sp.setPicture(sp.master.rotate(angle));
-                flameSprite.setPicture(sp.breath.rotate(angle));
+                sp.rotate(angle);
+                flameSprite.rotate(angle);
                 flameSprite.setX(sp.getX());
                 flameSprite.setY(sp.getY());
             } else if(c.cmd.equals("flame")) {
@@ -124,7 +124,7 @@ public class Main {
                     int count = 0;
                     
                     {
-                        Clock.addTask(new Task() {
+                        ClockWorker.addTask(new Task() {
                             @Override
                             public void run() {
                                 double fac = 0.5 + 1.5 * count / EXPLOSION_STEPS;
@@ -180,7 +180,7 @@ public class Main {
                 bc.add("image"+i,im);
                 bc.add("text"+i,nm);
             }
-            Clock.stop();
+            ClockWorker.finish();
             JOptionPane.showMessageDialog(BasicFrame.getFrame().getContentPane(), bc);
             System.exit(0);
         }
@@ -347,8 +347,8 @@ public class Main {
         UIManager.put("OptionPane.messageFont", font);
         UIManager.put("OptionPane.buttonFont", font);
         JOptionPane.showMessageDialog(BasicFrame.getFrame().getContentPane(), bc);
-        Clock.start(CLOCK_RATE);
-        Clock.addTask(sc.moveSprites());
+        ClockWorker.initialize(CLOCK_RATE);
+        ClockWorker.addTask(sc.moveSprites());
         runNext();
     }
     

@@ -6,7 +6,7 @@
 package maze;
 
 import basicgraphics.BasicFrame;
-import basicgraphics.Clock;
+import basicgraphics.ClockWorker;
 import basicgraphics.Sprite;
 import basicgraphics.SpriteComponent;
 import basicgraphics.Task;
@@ -156,7 +156,7 @@ public class Maze {
                 // offscreen.
                 setPicture(new Picture(BasicFrame.createImage(1, 1)));
                 
-                Clock.addTask(new Task() {
+                ClockWorker.addTask(new Task() {
                     @Override
                     public void run() {
                         doMove();
@@ -184,7 +184,7 @@ public class Maze {
 //        mv.jp.addSprite(sp);
 //        mv.jp.start(0, 100);
         mv.initMaze(this);
-        Clock.addTask(mv.jp.moveSprites());
+        ClockWorker.addTask(mv.jp.moveSprites());
         System.out.println("Got here");
         return s;
     }
@@ -272,6 +272,10 @@ public class Maze {
     }
 
     public static void main(String[] args) throws Exception {
+        if(args.length==0) {
+            System.out.println("Usage: Maze MazeClass");
+            System.exit(0);
+        }
         try {
             assert false;
             throw new Error("Please enable assertions");

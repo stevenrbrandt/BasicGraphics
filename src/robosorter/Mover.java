@@ -5,7 +5,7 @@
  */
 package robosorter;
 
-import basicgraphics.Clock;
+import basicgraphics.ClockWorker;
 import basicgraphics.Sprite;
 import basicgraphics.SpriteComponent;
 import basicgraphics.Task;
@@ -29,7 +29,7 @@ public class Mover extends Sprite {
         this.board = board;
         p.transparentWhite();
         setPicture(p);
-        Clock.addTask(new Task() {
+        ClockWorker.addTask(new Task() {
             @Override
             public void run() {
                 doMove();
@@ -43,8 +43,7 @@ public class Mover extends Sprite {
         if (count > 0) {
             count--;
             if (count == 0) {
-                setVelX(0);
-                setVelY(0);
+                setVel(0,0);
             }
         }
         if (count == 0 || running == null) {

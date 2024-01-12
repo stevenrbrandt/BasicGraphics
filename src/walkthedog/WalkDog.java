@@ -6,7 +6,7 @@
 package walkthedog;
 
 import basicgraphics.BasicFrame;
-import basicgraphics.Clock;
+import basicgraphics.ClockWorker;
 import basicgraphics.CollisionEventType;
 import basicgraphics.Sprite;
 import basicgraphics.SpriteCollisionEvent;
@@ -14,7 +14,6 @@ import basicgraphics.SpriteComponent;
 import basicgraphics.Task;
 import basicgraphics.images.Picture;
 import java.awt.Dimension;
-import java.io.IOException;
 
 /**
  *
@@ -26,14 +25,15 @@ class Dog extends Sprite {
         super(sc);
         basePic = new Picture("dog.jpg");
         setPicture(basePic);
-        Clock.addTask(new Task() {
+        final double del = .1;
+        ClockWorker.addTask(new Task() {
             @Override
             public void run() {
                 count++;
                 if (count == 100) {
-                    setPicture(basePic.rotate(.1));
+                    setHeadingOffset(Math.PI+del);
                 } else if (count == 200) {
-                    setPicture(basePic.rotate(-.1));
+                    setHeadingOffset(Math.PI-del);
                     count = 0;
                 }
             }
@@ -43,8 +43,8 @@ class Dog extends Sprite {
     @Override
     public void processEvent(SpriteCollisionEvent ev) {
         if(ev.eventType == CollisionEventType.WALL_INVISIBLE) {
-            setX(800);
-            basePic = basePic.resize(1.1);
+            setVel(-getVelX(), 0);
+            setPicture(getPicture().flipUpDown());
         }
     }
 }
@@ -52,8 +52,10 @@ public class WalkDog {
     public static void main(String[] args) {
         SpriteComponent sc = new SpriteComponent();
         Dog dog = new Dog(sc);
-        dog.setVelX(-1.0);
-        dog.setX(750);
+        dog.setVel(-1.0, 0);
+        dog.setY(100);
+        dog.setX(800);
+        dog.setHeadingOffset(Math.PI);
         
         BasicFrame bf = new BasicFrame("Walk the Dog");
         String[][] layout = {{"dog"}};
@@ -61,7 +63,7 @@ public class WalkDog {
         bf.add("dog",sc);
         sc.setPreferredSize(new Dimension(800,400));
         bf.show();
-        Clock.addTask(sc.moveSprites());
-        Clock.start(10);
+        ClockWorker.addTask(sc.moveSprites());
+        ClockWorker.initialize(10);
     }
 }

@@ -7,7 +7,7 @@ package prog.game;
 
 import basicgraphics.BasicFrame;
 import basicgraphics.Bounds;
-import basicgraphics.Clock;
+import basicgraphics.ClockWorker;
 import basicgraphics.Sprite;
 import basicgraphics.SpriteComponent;
 import basicgraphics.Task;
@@ -280,7 +280,7 @@ public class Game {
             }
 
             {
-                Clock.addTask(new Task() {
+                ClockWorker.addTask(new Task() {
                     @Override
                     public void run() {
                         //moveTo();
@@ -303,8 +303,8 @@ public class Game {
         sprite.is_visible = true;
         sprite.setX(storex);
         sprite.setY(storey);
-        Clock.addTask(sprc.moveSprites());
-        Clock.start(10);
+        ClockWorker.addTask(sprc.moveSprites());
+        ClockWorker.initialize(10);
         String[][] layout = {
             {"l1" , "d1" , "l2" , "d2" , "roll", "ival0","ival","viz","score"},
             {"box", "box", "box", "box", "box" , "box"  ,"box" ,"box","box"}

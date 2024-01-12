@@ -11,9 +11,9 @@ package basicgraphics;
  */
 public abstract class Task implements Runnable {
     private boolean submitted = false;
-    int iteration = -1;
+    int iteration;
     private boolean finished = false;
-    private int maxIter;
+    final private int minIter, maxIter;
     void setSubmitted() { submitted = true; }
     public boolean isSubmitted() { return submitted; }
     public int iteration() { return iteration; }
@@ -25,7 +25,7 @@ public abstract class Task implements Runnable {
         iteration++;
         try {
             run();
-        } catch(Exception ex) {
+        } catch(Throwable ex) {
             ex.printStackTrace();
             setFinished();
         }
@@ -35,9 +35,18 @@ public abstract class Task implements Runnable {
     }
     
     public Task() {
-        this.maxIter = -1;
+        this.minIter = 0;
+        this.maxIter = Integer.MAX_VALUE;
+        this.iteration = this.minIter-1;
     }
     public Task(int maxIter) {
+        this.minIter = 0;
         this.maxIter = maxIter;
+        this.iteration = this.minIter-1;
+    }
+    public Task(int minIter, int maxIter) {
+        this.minIter = minIter;
+        this.maxIter = maxIter;
+        this.iteration = this.minIter-1;
     }
 }

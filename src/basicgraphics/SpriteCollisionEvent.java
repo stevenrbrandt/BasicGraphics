@@ -12,13 +12,16 @@ package basicgraphics;
 public class SpriteCollisionEvent {
     public final boolean xlo, xhi, ylo, yhi;
     public final CollisionEventType eventType;
-    public SpriteCollisionEvent(boolean xlo,boolean xhi,boolean ylo,boolean yhi, CollisionEventType ct) { 
-       this.xlo = xlo;
+
+    public SpriteCollisionEvent(boolean xlo, boolean xhi, boolean ylo, boolean yhi, CollisionEventType ct) {
+        this.xlo = xlo;
         this.xhi = xhi;
         this.ylo = ylo;
         this.yhi = yhi;
         this.eventType = ct;
-        if(ct == null) throw new NullPointerException();
+        if (ct == null) {
+            throw new NullPointerException();
+        }
     }
     private final static String PRE = "CollisionEvent[";
     public String toString() {
