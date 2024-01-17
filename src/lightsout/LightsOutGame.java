@@ -54,7 +54,7 @@ public class LightsOutGame {
 
     public void checkWin() {
         if (litTiles == 0) {
-            JOptionPane.showMessageDialog(sc, "You're winner!");
+            JOptionPane.showMessageDialog(sc, "You won!");
             System.exit(0);
         }
     }

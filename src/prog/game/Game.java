@@ -37,15 +37,14 @@ import static prog.game.Game2.readGameFile;
  * @author sbrandt
  */
 public class Game {
-    final static Color offwhite = new Color(200,255,255);
-            
-
+    final static Color OFF_WHITE = new Color(200,255,255);
+         
     final public static int BOUNDARY = 3;
 
     final public static int BOX = 50;
     
     static int mousex, mousey;
-    volatile static int starting_square = -1;
+    volatile static int starting_square = 0;
     
     static int divup(int num,int denom) {
         int d = num/denom;
@@ -56,12 +55,11 @@ public class Game {
     
     static Font theFont = new Font("Arial", Font.BOLD, BOX);
     static BufferedImage[] board = new BufferedImage[1];
-    static int storex = BOX, storey = -BOX;
+    static int storex = BOX, storey = BOX;
     
     static BufferedImage createBoard() {
         final BufferedImage im = BasicFrame.createImage(BOX * 20, BOX * Game2._by_pos.size());
         Graphics gr = im.getGraphics();
-        final List<Integer> moves = new ArrayList<>();
         gr.setFont(theFont);
         for (int i = 0; i < Game2._by_pos.size(); i++) {
             Group group = Game2._by_pos.get(i).gr;
@@ -86,11 +84,6 @@ public class Game {
         return im;
     }
     
-    static void OK(String msg) {
-        JLabel label = new JLabel(msg);
-        label.setFont(theFont);
-        JOptionPane.showMessageDialog(null, label);
-    }
     
     static int score=0, turn_score = 10;
     
@@ -138,7 +131,7 @@ public class Game {
                 gr.setColor(Color.yellow);
                 System.out.println("yellow is set");
             } else {
-                gr.setColor(offwhite);
+                gr.setColor(OFF_WHITE);
             }
         } else {
             gr.setColor(Color.cyan);
@@ -195,7 +188,7 @@ public class Game {
                 viz);
         
         for(int i=1;i<=6;i++) {
-            BufferedImage im = bf.createImage(BOX, BOX);
+            BufferedImage im = BasicFrame.createImage(BOX, BOX);
             Graphics g = im.getGraphics();
             g.setFont(new Font(Font.MONOSPACED, Font.BOLD, BOX * 9 / 10));
             g.setColor(new Color(200,255,255));
@@ -297,12 +290,13 @@ public class Game {
         sprite.setDrawingPriority(2);
         Picture pawnPic = new Picture("pawn2.png");
         pawnPic = pawnPic.resize((1.0*BOX) / Math.max(pawnPic.getWidth(),pawnPic.getHeight()));
-        pawnPic.transparentWhite();
+        //pawnPic.transparentWhite();
         sprite.setPicture(pawnPic);
         System.out.println("sprite: "+sprite.getWidth()+"x"+sprite.getHeight());
         sprite.is_visible = true;
         sprite.setX(storex);
         sprite.setY(storey);
+        System.out.printf("store=%d, %d%n", storex, storey);
         ClockWorker.addTask(sprc.moveSprites());
         ClockWorker.initialize(10);
         String[][] layout = {
@@ -319,7 +313,7 @@ public class Game {
         bf.add("l1", new JLabel("d1="));
         bf.add("l2", new JLabel("d2="));
 //        bf.add("blank", new JPanel());
-        JButton jb = new JButton("Roll");
+        JButton rollButton = new JButton("Roll");
         JLabel ival = new JLabel("i=0");
         bf.add("ival",ival);
         JLabel ival0 = new JLabel("old: i=0");
@@ -338,16 +332,18 @@ public class Game {
                 }
             }
         });
-        jb.addActionListener(new ActionListener() {
+        rollButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 double ox = sprite.getX();
                 double oy = sprite.getY();
                 int py = ((int) oy ) / BOX;
                 int px = ((int) ox ) / BOX;
-                boolean on_position = positions.size() == 0 || (
+                boolean on_position = positions.isEmpty() || (
                         positions.get(positions.size()-1).y == py &&
                         Game2._by_pos.get(py).depth+1 == px);
+                System.out.println("on position: "+on_position);
+                System.out.println("positions: "+positions.size());
                 if (!on_position) {
                     JOptionPane.showMessageDialog(null, "Your playing piece is not on the right square");
                     turn_score -= 3;
@@ -361,6 +357,7 @@ public class Game {
                     storex = (int)(ox + sprite.getWidth() / 2);
                     storey = (int)(oy + sprite.getHeight() / 2);
                     starting_square = py;
+                    System.out.printf("starting square: %d, px=%d, py=%d, ox=%f, oy=%f%n",starting_square,px,py,ox,oy);
                     board[0] = createBoard();
                     sprc.repaint();
                     if(turn_score > 0) {
@@ -376,9 +373,6 @@ public class Game {
                     Game2.values.put("d2",d2.getSpots());
                     positions.clear();
                     resetTokens(tokens);
-                    int traceDepth = py;
-                    int i = py+1;
-                    int adv = 0;
                     Map<Integer,Integer> offsets = new HashMap<>();
                     boolean game_on = false;
                     for(int ii=0;ii<d1.getSpots();ii++) {
@@ -410,7 +404,7 @@ public class Game {
                 }
             }
         });
-        bf.add("roll", jb);
+        bf.add("roll", rollButton);
         bf.setAllFonts(new Font(Font.MONOSPACED, Font.BOLD, BOX * 9 / 10));
         bf.show();
     }
