@@ -118,13 +118,13 @@ public class BasicFrame {
         int basex = 0, basey = 0;
         for(int i=0;i<layout.length;i++) {
             basex = 0;
-            for(int j=0;j<layout[i].length;j++) {
-                for(int i2=0;i2<heights[i];i2++) {
+            for (int j = 0; j < layout[i].length; j++) {
+                for (int i2 = 0; i2 < heights[i]; i2++) {
                     for (int j2 = 0; j2 < widths[j]; j2++) {
                         try {
                             ret[basey + i2][basex + j2] = layout[i][j];
                         } catch (ArrayIndexOutOfBoundsException ae) {
-                            System.out.printf("i,j=%d,%d: basex=%d,i2=%d,[%d],basey=%d,j2=%d,[%d],%n",i,j, basex, i2, heights[i], basey, j2, widths[j]);
+                            System.out.printf("i,j=%d,%d: basex=%d,i2=%d,[%d],basey=%d,j2=%d,[%d],%n", i, j, basex, i2, heights[i], basey, j2, widths[j]);
                             throw ae;
                         }
                     }
