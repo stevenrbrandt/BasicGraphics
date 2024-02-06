@@ -23,7 +23,7 @@ public class Sprite implements MouseListener, Comparable<Sprite> {
     
     private SpriteComponent component;
     private boolean added = false;
-    private double headingOffset=0, heading=0;
+    private double headingOffset=0, heading=Math.PI/2;
     
     private Sprite() {}
     public Sprite(SpriteComponent sc) {
