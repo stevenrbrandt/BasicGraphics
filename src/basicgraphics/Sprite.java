@@ -23,7 +23,8 @@ public class Sprite implements MouseListener, Comparable<Sprite> {
     
     private SpriteComponent component;
     private boolean added = false;
-    private double headingOffset=0, heading=Math.PI/2;
+    private double headingOffset=0, heading=0;
+    public boolean freezeOrientation = false;
     
     private Sprite() {}
     public Sprite(SpriteComponent sc) {
@@ -155,6 +156,9 @@ public class Sprite implements MouseListener, Comparable<Sprite> {
         setVel(sp*Math.cos(heading),sp*Math.sin(heading));
     }
     public double getHeadingOffset() { return headingOffset; }
+    public void setForwardDirection(double velx, double vely) {
+        this.headingOffset = Math.atan2(vely,velx)-heading;
+    }
     public void setVel(double velx, double vely) {
         this.velx = velx;
         this.vely = vely;
@@ -338,7 +342,10 @@ public class Sprite implements MouseListener, Comparable<Sprite> {
     AffineTransform getTransform() {
         AffineTransform af = new AffineTransform();
         af.translate(getX(),getY());
+        if(freezeOrientation)
+            return af;
         af.rotate(heading+headingOffset, getWidth()/2, getHeight()/2);
         return af;
     }
+    
 }
