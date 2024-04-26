@@ -47,7 +47,13 @@ public class SpriteComponent extends JComponent implements MouseListener {
     }
 
     void addSprite(Sprite sp) {
-        sprites.add(sp);
+        try {
+            Util.invokeAndWait(()->{ sprites.add(sp);});
+        } catch (InterruptedException ex) {
+            TaskRunner.report(ex, this);
+        } catch (InvocationTargetException ex) {
+            TaskRunner.report(ex, this);
+        }
     }
 
     public void paintBackground(Graphics g) {
@@ -88,10 +94,7 @@ public class SpriteComponent extends JComponent implements MouseListener {
                     }
                 }
             };
-            if(SwingUtilities.isEventDispatchThread())
-                run.run();
-            else
-                SwingUtilities.invokeAndWait(run);
+            Util.invokeAndWait(run);
         } catch (InterruptedException ex) {
             TaskRunner.report(ex, this);
         } catch (InvocationTargetException ex) {
@@ -232,6 +235,7 @@ public class SpriteComponent extends JComponent implements MouseListener {
     }
 
     private void moveSprites_() {
+        assert SwingUtilities.isEventDispatchThread();
         Dimension d = getSize();
         if (d.width == 0 || d.height == 0) {
             return;
