@@ -5,14 +5,12 @@
  */
 package basicflyer;
 
-import basicgraphics.BasicContainer;
 import basicgraphics.BasicFrame;
+import basicgraphics.Card;
 import basicgraphics.ClockWorker;
 import basicgraphics.SpriteComponent;
 import basicgraphics.sounds.ReusableClip;
-import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -35,13 +33,8 @@ public class Flyer {
     public static void main(String[] args) throws IOException {
         final ReusableClip clip = new ReusableClip("beep.wav");
         final BasicFrame bf = new BasicFrame("Flyer");
-        final Container content = bf.getContentPane();
-        final CardLayout cards = new CardLayout();
-        content.setLayout(cards);
-        BasicContainer bc1 = new BasicContainer();
-        content.add(bc1,"Splash");
-        final BasicContainer bc2 = new BasicContainer();
-        content.add(bc2,"Game");
+        Card bc1 = bf.getCard();
+        final Card bc2 = bf.getCard();
         final SpriteComponent sc = new SpriteComponent() {
             @Override
             public void paintBackground(Graphics g) {
@@ -63,7 +56,8 @@ public class Flyer {
         sc.setPreferredSize(new Dimension(800,400));
         String[][] splashLayout = {
             {"Title"},
-            {"Button"}
+            {"Button"},
+            {"Button2"}
         };
         bc1.setStringLayout(splashLayout);
         bc1.add("Title",new JLabel("Flyer Game"));
@@ -71,7 +65,7 @@ public class Flyer {
         jstart.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                cards.show(content,"Game");
+                bc2.showCard();
                 // The BasicContainer bc2 must request the focus
                 // otherwise, it can't get keyboard events.
                 bc2.requestFocus();
@@ -81,6 +75,7 @@ public class Flyer {
             }
         });
         bc1.add("Button",jstart);
+        bc1.add("Button2", new JButton("Button2"));
         String[][] layout = {{
             "Flyer"
         }};
@@ -106,6 +101,7 @@ public class Flyer {
                 }
             }
         });
+        
         ClockWorker.addTask(sc.moveSprites());
     }
 }

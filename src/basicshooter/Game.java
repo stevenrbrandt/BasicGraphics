@@ -7,7 +7,6 @@ package basicshooter;
 
 import basicgraphics.BasicFrame;
 import basicgraphics.ClockWorker;
-import basicgraphics.Sprite;
 import basicgraphics.SpriteComponent;
 import basicgraphics.SpriteSpriteCollisionListener;
 import basicgraphics.images.Picture;

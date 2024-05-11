@@ -5,8 +5,11 @@
 package basicgraphics;
 
 import java.lang.reflect.InvocationTargetException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 
 /**
@@ -29,11 +32,23 @@ public class Util {
         return a.equals(b);
     }
     
-    public static void invokeAndWait(Runnable r) throws InterruptedException, InvocationTargetException {
+    public static void invokeAndWait(Runnable r) {
         if(SwingUtilities.isEventDispatchThread())
             r.run();
         else {
-            SwingUtilities.invokeAndWait(r);
+            try {
+                SwingUtilities.invokeAndWait(r);
+            } catch(Exception ex) {
+                TaskRunner.report(ex, null);
+            }
+        }
+    }
+
+    static void sleep(int duration) {
+        try {
+            Thread.sleep(duration);
+        } catch (InterruptedException ex) {
+            TaskRunner.report(ex, null);
         }
     }
 }

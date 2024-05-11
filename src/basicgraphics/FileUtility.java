@@ -53,7 +53,7 @@ public class FileUtility {
                     if(s != null)
                         return s;
                 }  
-            } else if (f.getName().equals(name)) {
+            } else if (f.getName().equalsIgnoreCase(name)) {
                 return f;
             }
         }

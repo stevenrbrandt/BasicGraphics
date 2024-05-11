@@ -59,6 +59,8 @@ public class TaskRunner {
         SwingUtilities.invokeLater(re);
     }
     public static void report(Throwable e,Component c) {
+      if(c == null)
+          c = BasicFrame.getFrame().getContentPane();
       // We don't want to lose information
       // about exceptions!
       // First provide to the console.

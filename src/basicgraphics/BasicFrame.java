@@ -5,6 +5,7 @@
  */
 package basicgraphics;
 
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -24,6 +25,7 @@ import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.LayoutManager;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -76,6 +78,16 @@ public class BasicFrame {
                 heldKeys.put(e.getKeyCode(), false);
             }
         });
+    }
+    public final static CardLayout cards = new CardLayout();
+    static int cardNum = 0;
+    public Card getCard() {
+        Container content = getContentPane();
+        content.setLayout(cards);
+        String name = "card"+(cardNum++);
+        Card card = new Card(name);
+        content.add(card, name);
+        return card;
     }
     
     public static BasicFrame getFrame() {

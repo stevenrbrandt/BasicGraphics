@@ -19,6 +19,8 @@ import java.net.URL;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
+import java.util.Map;
+import java.util.HashMap;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -161,26 +163,38 @@ public class Picture extends JComponent {
      * @param name
      */
     public Picture(String name) {
-        URL src = null;
-        try {
-            src = new URL(name);
-        } catch(MalformedURLException me) {
-            ;
-        }
-        if(src == null)
-            src = getClass().getResource(name);
-        if(src == null) {
-            src = FileUtility.findFile(name);
+        if(loadedImages.containsKey(name)) {
+            image = loadedImages.get(name);
+        } else {
+            URL src = null;
+            try {
+                src = new URL(name);
+                System.out.println("src1: "+src);
+            } catch(MalformedURLException me) {
+                ;
+            }
             if(src == null) {
-                new RuntimeIOException("Could not load: "+name).printStackTrace();
+                src = getClass().getResource(name);
+                System.out.println("src2: "+src);
+            }
+            if(src == null) {
+                src = FileUtility.findFile(name);
+                if(src == null) {
+                    //new RuntimeIOException("Could not load: "+name).printStackTrace();
+                    System.out.println("Loading randblock for: "+name);
+                    image = randBlock();
+                } else {
+                    System.out.println("src3: "+src);
+                }
+            }
+            try {
+                image = ImageIO.read(src);
+                System.out.println("src4: "+src);
+            } catch (Exception ex) {
+                    System.out.println("Loading randblock for 2: "+name);
+                //new RuntimeIOException("Could not load: "+name+" / "+src,ex).printStackTrace();
                 image = randBlock();
             }
-        }
-        try {
-            image = ImageIO.read(src);
-        } catch (Exception ex) {
-            new RuntimeIOException("Could not load: "+name+" / "+src,ex).printStackTrace();
-            image = randBlock();
         }
         width = image.getWidth();
         height = image.getHeight();
@@ -188,7 +202,9 @@ public class Picture extends JComponent {
         setPreferredSize(new Dimension(width,height));
         setMinimumSize(getPreferredSize());
         createMask();
+        loadedImages.put(name, image);
     }
+    static Map<String,BufferedImage> loadedImages = new HashMap<>();
     
     void createMask() {
         mask = new boolean[width][height];
@@ -279,5 +295,8 @@ public class Picture extends JComponent {
         gr.setColor(c);
         gr.fillRect(0, 0, w, h);
         return im;
+    }
+    public static void main(String[] args) {
+        Picture p = new Picture("meleeBasicAttackL.png");
     }
 }

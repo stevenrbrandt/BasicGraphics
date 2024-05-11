@@ -47,13 +47,7 @@ public class SpriteComponent extends JComponent implements MouseListener {
     }
 
     void addSprite(Sprite sp) {
-        try {
-            Util.invokeAndWait(()->{ sprites.add(sp);});
-        } catch (InterruptedException ex) {
-            TaskRunner.report(ex, this);
-        } catch (InvocationTargetException ex) {
-            TaskRunner.report(ex, this);
-        }
+        Util.invokeAndWait(()->{ sprites.add(sp);});
     }
 
     public void paintBackground(Graphics g) {
@@ -75,31 +69,25 @@ public class SpriteComponent extends JComponent implements MouseListener {
     }
 
     public final void paintSprites(final Graphics g_) {
-        try {
-            Runnable run = ()->{
-                Graphics2D g = (Graphics2D) g_;
-                //Collections.sort(sprites, DRAWING_PRIORITY);
-                for (Sprite sprite : new ArrayList<>(sprites)) {
-                    if (!sprite.is_visible) {
-                        continue;
-                    }
-                    AffineTransform at = sprite.getTransform();
-                    g.drawImage(sprite.getPicture().getImage(), at, null);
-                    if (drawBox) {
-                        g.setTransform(at);
-                        g.setColor(Color.black);
-                        int w = (int) sprite.getWidth();
-                        int h = (int) sprite.getHeight();
-                        g.draw(new Rectangle(2, 2, w - 1, h - 1));
-                    }
+        Runnable run = ()->{
+            Graphics2D g = (Graphics2D) g_;
+            //Collections.sort(sprites, DRAWING_PRIORITY);
+            for (Sprite sprite : new ArrayList<>(sprites)) {
+                if (!sprite.is_visible) {
+                    continue;
                 }
-            };
-            Util.invokeAndWait(run);
-        } catch (InterruptedException ex) {
-            TaskRunner.report(ex, this);
-        } catch (InvocationTargetException ex) {
-            TaskRunner.report(ex, this);
-        }
+                AffineTransform at = sprite.getTransform();
+                g.drawImage(sprite.getPicture().getImage(), at, null);
+                if (drawBox) {
+                    g.setTransform(at);
+                    g.setColor(Color.black);
+                    int w = (int) sprite.getWidth();
+                    int h = (int) sprite.getHeight();
+                    g.draw(new Rectangle(2, 2, w - 1, h - 1));
+                }
+            }
+        };
+        Util.invokeAndWait(run);
     }
     
     public boolean scroll(int x,int y,int s) {

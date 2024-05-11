@@ -5,12 +5,14 @@
  */
 package basicgraphics;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.Queue;
 import javax.swing.SwingUtilities;
+import java.util.concurrent.ConcurrentLinkedDeque;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -19,20 +21,24 @@ import javax.swing.SwingUtilities;
 public class ClockWorker {
 
     private static Timer t = null;
-    private static List<Task> newTasks = new ArrayList<>();
+    private static Queue<Task> newTasks = new ConcurrentLinkedDeque<>();
+    private final static Task SENTINAL = new Task() {
+        @Override
+        public void run() {
+        }
+    };
 
     public static void addTask(Task task) {
         if (task.isSubmitted()) {
             return;
         }
         task.setSubmitted();
-        synchronized (newTasks) {
-            newTasks.add(task);
-        }
+        newTasks.add(task);
     }
 
     public static void finish() {
         t.cancel();
+        t = null;
     }
 
     public static void initialize(int period) {
@@ -46,24 +52,18 @@ public class ClockWorker {
 
             @Override
             public void run() {
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        synchronized (newTasks) {
-                            if(newTasks.isEmpty()) {
-                                return;
-                            }
-                            Iterator<Task> iter = newTasks.iterator();
-                            while (iter.hasNext()) {
-                                Task t = iter.next();
-                                t.run_();
-                                if (t.isFinished()) {
-                                    iter.remove();
-                                }
-                            }
-                        }
+                int n = newTasks.size();
+                while (true) {
+                    final Task t = newTasks.remove();
+                    if (t == SENTINAL) {
+                        newTasks.add(t);
+                        return;
                     }
-                });
+                    Util.invokeAndWait(()->{ t.run_(); });
+                    if (!t.isFinished()) {
+                        newTasks.add(t);
+                    }
+                }
             }
         };
         t.schedule(tt, 0, period);

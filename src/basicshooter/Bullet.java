@@ -6,7 +6,6 @@
 package basicshooter;
 
 import basicgraphics.Sprite;
-import basicgraphics.SpriteCollisionEvent;
 import basicgraphics.SpriteComponent;
 import java.awt.event.KeyEvent;
 

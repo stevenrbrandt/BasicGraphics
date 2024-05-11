@@ -1,7 +1,11 @@
 package basicgraphics.sounds;
 
 import basicgraphics.BasicFrame;
+import basicgraphics.FileUtility;
+import basicgraphics.images.RuntimeIOException;
 import java.net.URI;
+import java.net.URL;
+import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
@@ -79,9 +83,32 @@ public final class ReusableClip {
     }
     
     private static URI getURI(String name) {
+        /*
         try {
             return ReusableClip.class.getResource(name).toURI();
         } catch (URISyntaxException ex) {
+            return null;
+        }
+        */
+        URL src = null;
+        try {
+            src = new URL(name);
+        } catch(MalformedURLException me) {
+            ;
+        }
+        if(src == null)
+            src = ReusableClip.class.getResource(name);
+        if(src == null) {
+            src = FileUtility.findFile(name);
+            if(src == null) {
+                new RuntimeIOException("Could not load: "+name).printStackTrace();
+                src = ReusableClip.class.getResource("beep.wav");
+            }
+        }
+        try {
+            return src.toURI();
+        } catch(URISyntaxException e) {
+            e.printStackTrace();
             return null;
         }
     }
