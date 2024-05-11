@@ -5,14 +5,10 @@
  */
 package basicgraphics;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.Queue;
-import javax.swing.SwingUtilities;
 import java.util.concurrent.ConcurrentLinkedDeque;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
@@ -52,14 +48,14 @@ public class ClockWorker {
 
             @Override
             public void run() {
-                int n = newTasks.size();
+                newTasks.add(SENTINAL);
                 while (true) {
                     final Task t = newTasks.remove();
                     if (t == SENTINAL) {
-                        newTasks.add(t);
                         return;
                     }
                     Util.invokeAndWait(()->{ t.run_(); });
+                    //SwingUtilities.invokeLater(()->{ t.run_(); });
                     if (!t.isFinished()) {
                         newTasks.add(t);
                     }
