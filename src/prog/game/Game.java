@@ -41,7 +41,7 @@ public class Game {
          
     final public static int BOUNDARY = 3;
 
-    final public static int BOX = 50;
+    final public static int BOX = 30;
     
     static int mousex, mousey;
     volatile static int starting_square = 0;
@@ -264,6 +264,11 @@ public class Game {
             int rebox(int n) {
                 return (n / BOX) * BOX + BOX / 2;
             }
+            @Override
+            public void setY(double d) {
+                System.out.println("set to: "+d);
+                super.setY(d);
+            }
 
             @Override
             public void mouseReleased(MouseEvent me) {
@@ -287,11 +292,16 @@ public class Game {
                 });
             }
         };
+        
         sprite.setDrawingPriority(2);
         Picture pawnPic = new Picture("pawn2.png");
         pawnPic = pawnPic.resize((1.0*BOX) / Math.max(pawnPic.getWidth(),pawnPic.getHeight()));
         //pawnPic.transparentWhite();
+        Sprite tester = new Sprite(sprc);
+        tester.setY(4*BOX);
+        tester.setPicture(pawnPic);
         sprite.setPicture(pawnPic);
+        sprite.freezeOrientation = true;
         System.out.println("sprite: "+sprite.getWidth()+"x"+sprite.getHeight());
         sprite.is_visible = true;
         sprite.setX(storex);
@@ -357,6 +367,7 @@ public class Game {
                     storex = (int)(ox + sprite.getWidth() / 2);
                     storey = (int)(oy + sprite.getHeight() / 2);
                     starting_square = py;
+                    sprite.setY(BOX*py);
                     System.out.printf("starting square: %d, px=%d, py=%d, ox=%f, oy=%f%n",starting_square,px,py,ox,oy);
                     board[0] = createBoard();
                     sprc.repaint();

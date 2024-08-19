@@ -2,6 +2,7 @@ package basicgraphics.sounds;
 
 import basicgraphics.BasicFrame;
 import basicgraphics.FileUtility;
+import basicgraphics.TaskRunner;
 import basicgraphics.images.RuntimeIOException;
 import java.net.URI;
 import java.net.URL;
@@ -10,6 +11,8 @@ import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 
@@ -26,7 +29,7 @@ public final class ReusableClip {
 
     byte[] buf;
     SourceDataLine sourceLine;
-    
+
     static Thread thread;
     static boolean running = false;
     static LinkedList<ReusableClip> queue = new LinkedList<>();
@@ -39,41 +42,48 @@ public final class ReusableClip {
     });
 
     static {
-        thread = new Thread(()->{});
+        thread = new Thread(() -> {
+        });
         thread.start();
     }
-    
+
     private static synchronized ReusableClip dequeue() {
-        if(queue.size() == 0) return null;
-        else return queue.removeLast();
+        if (queue.size() == 0) {
+            return null;
+        } else {
+            return queue.removeLast();
+        }
     }
-    
+
     private static synchronized void done() {
         running = false;
     }
-    
+
     private static synchronized void enqueue(ReusableClip r) {
         queue.addFirst(r);
-        if(!running) {
+        if (!running) {
             try {
                 thread.join();
             } catch (InterruptedException ex) {
             }
             running = true;
-            thread = new Thread(()->{
-                while(true) {
+            thread = new Thread(() -> {
+                while (true) {
                     ReusableClip clip = dequeue();
-                    if(clip == null)
+                    if (clip == null) {
                         break;
+                    }
                     try {
                         clip.playNow();
-                    if(clip.looping)
-                        enqueue(clip);
-                    } catch(Throwable e) {
-                        if(verbose)
+                        if (clip.looping) {
+                            enqueue(clip);
+                        }
+                    } catch (Throwable e) {
+                        if (verbose) {
                             e.printStackTrace();
-                        else
-                            System.err.println("endclip: "+e);
+                        } else {
+                            System.err.println("endclip: " + e);
+                        }
                     }
                 }
                 done();
@@ -81,7 +91,7 @@ public final class ReusableClip {
             thread.start();
         }
     }
-    
+
     private static URI getURI(String name) {
         /*
         try {
@@ -89,58 +99,70 @@ public final class ReusableClip {
         } catch (URISyntaxException ex) {
             return null;
         }
-        */
+         */
         URL src = null;
         try {
             src = new URL(name);
-        } catch(MalformedURLException me) {
+        } catch (MalformedURLException me) {
             ;
         }
-        if(src == null)
+        if (src == null) {
             src = ReusableClip.class.getResource(name);
-        if(src == null) {
-            src = FileUtility.findFile(name);
-            if(src == null) {
-                new RuntimeIOException("Could not load: "+name).printStackTrace();
+        }
+        if (src == null) {
+            try {
+                src = FileUtility.findFile(name).toURL();
+            } catch (MalformedURLException ex) {
+                TaskRunner.report(ex, null);
+            }
+            if (src == null) {
+                new RuntimeIOException("Could not load: " + name).printStackTrace();
                 src = ReusableClip.class.getResource("beep.wav");
             }
         }
         try {
             return src.toURI();
-        } catch(URISyntaxException e) {
+        } catch (URISyntaxException e) {
             e.printStackTrace();
             return null;
         }
     }
+
     public ReusableClip(String name) {
         this(getURI(name));
     }
     final String name;
+
     public ReusableClip(URI uri) {
         this.name = uri == null ? "?" : uri.getPath();
         try {
-            if(verbose)
-                System.out.println("loading sound: "+uri);
+            if (verbose) {
+                System.out.println("loading sound: " + uri);
+            }
             AudioInputStream audioStream = AudioSystem.getAudioInputStream(uri.toURL());
             AudioFormat audioFormat = audioStream.getFormat();
             DataLine.Info info = new DataLine.Info(SourceDataLine.class, audioFormat);
             sourceLine = (SourceDataLine) AudioSystem.getLine(info);
             sourceLine.open(audioFormat);
             long nbytes = audioStream.getFrameLength();
-            while(nbytes % 4 != 0) nbytes++;
-            buf = new byte[(int)nbytes];
+            while (nbytes % 4 != 0) {
+                nbytes++;
+            }
+            buf = new byte[(int) nbytes];
             audioStream.read(buf);
         } catch (Exception ex) {
-            if(verbose)
+            if (verbose) {
                 ex.printStackTrace();
-            else
+            } else {
                 System.err.println(ex);
+            }
         }
     }
-    
+
     public void playNow() {
-        if(verbose)
-            System.out.println("playing sound: "+name);
+        if (verbose) {
+            System.out.println("playing sound: " + name);
+        }
         sourceLine.start();
         sourceLine.write(buf, 0, buf.length);
         sourceLine.drain();
@@ -157,6 +179,7 @@ public final class ReusableClip {
     }
 
     volatile boolean looping = false;
+
     public synchronized void loop() {
         looping = true;
         enqueue(this);
@@ -185,7 +208,7 @@ public final class ReusableClip {
         clip1.stop();
         clip2.stop();
         long t2 = System.currentTimeMillis();
-        System.out.printf("time=%d%n",(t2-t1));
+        System.out.printf("time=%d%n", (t2 - t1));
         Thread.sleep(5000);
         testOverlapping(clip1, clip2);
         bf.dispose();

@@ -51,7 +51,7 @@ public class ProgSpriteComponent extends SpriteComponent {
             Sprite sp = tokens.get(n - 1);
             sp.setY(pos.y * Game.BOX);
             sp.setX(pos.x * Game.BOX);
-            sp.is_visible = "On".equals(viz.getText());
+            sp.is_visible = true;//"On".equals(viz.getText());
             n++;
         }
         while (n <= 6) {

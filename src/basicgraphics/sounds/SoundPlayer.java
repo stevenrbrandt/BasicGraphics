@@ -32,7 +32,7 @@ public class SoundPlayer {
         if(src == null)
             src = getClass().getResource(filename);
         if(src == null) {
-            src = FileUtility.findFile(filename);
+            src = FileUtility.findFile(filename).toURL();
             if(src == null) {
                 new RuntimeIOException("Could not load: "+filename).printStackTrace();
             }

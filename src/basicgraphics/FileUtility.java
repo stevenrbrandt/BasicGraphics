@@ -7,6 +7,7 @@ package basicgraphics;
 
 import java.io.File;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -18,22 +19,19 @@ import java.util.logging.Logger;
 public class FileUtility {
     
 
-    public static URL findFile(String name) {
+    public static URI findFile(String name) {
         int slash = name.replace('\\','/').lastIndexOf('/');
         if(slash > 0)
             name = name.substring(slash+1);
         File f = findFile(new File("."),name);
         if(f == null)
             f = findFileI(new File("."),name);
+        //System.out.println(" --> findFile: name: "+name);
         //System.out.println("Search: "+name+" => "+f);
         if(f == null) {
             return null;
         } else {
-            try {
-                return f.toURI().toURL();
-            } catch (MalformedURLException ex) {
-                return null;
-            }
+            return f.toURI();
         }
     }
     

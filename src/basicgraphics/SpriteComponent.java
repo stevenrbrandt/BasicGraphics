@@ -15,7 +15,7 @@ import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.geom.AffineTransform;
-import java.lang.reflect.InvocationTargetException;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -26,8 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
@@ -40,6 +38,26 @@ public class SpriteComponent extends JComponent implements MouseListener {
     private final Set<Sprite> sprites = new TreeSet<>();
     
     int offsetX=0, offsetY=0;
+    double subOffsetX=0, subOffsetY=0;
+    Dimension backgroundSize;
+    Picture background = null;
+    Sprite focus = null;
+    public void setBackgroundSize(Dimension d) {
+        backgroundSize = d;
+        if(background == null) {
+            BufferedImage bimage = BasicFrame.createImage(d.width, d.height);
+            paintBackground(bimage.getGraphics());
+            background = new Picture(bimage);
+            System.out.println("Image size: "+d);
+        }
+    }
+    public void setPicture(Picture p) {
+        background = p;
+        setBackgroundSize(p.getSize());
+    }
+    public void setFocus(Sprite s) {
+        focus = s;
+    }
 
     public SpriteComponent() {
         setPreferredSize(new Dimension(100, 100));
@@ -54,6 +72,23 @@ public class SpriteComponent extends JComponent implements MouseListener {
         Dimension d = getSize();
         g.setColor(Color.white);
         g.fillRect(0, 0, d.width, d.height);
+    }
+    
+    public Dimension getFullSize() {
+        return backgroundSize == null ? super.getSize() : backgroundSize;
+    }
+
+    public final void _paintBackground(Graphics g) {
+        Dimension d = getSize();
+        if (background != null) {
+            int ix = (int)(focus.getCenterX()-d.width/2);
+            int iy = (int)(focus.getCenterY()-d.height/2);
+            //g.drawImage(background.getImage(),ix,iy, this);
+            g.drawImage(background.getImage(), 0, 0, this);
+        } else {
+            g.setColor(Color.white);
+            g.fillRect(0, 0, d.width, d.height);
+        }
     }
     
     public void setOffsetX(int x) { offsetX = x; }
@@ -108,14 +143,36 @@ public class SpriteComponent extends JComponent implements MouseListener {
     Dimension sz;
 
     @Override
-    public void paintComponent(Graphics g) {
+    public final void paintComponent(Graphics g) {
         Dimension d = getSize();
-        if (image == null || sz.width != d.width || sz.height != d.height) {
-            image = createImage(d.width, d.height);
-            sz = d;
+        Dimension b = backgroundSize;
+        if(b == null) b = d;
+        //image = null;
+        if (image == null || sz.width != b.width || sz.height != b.height) {
+            image = createImage(b.width, b.height);
+            sz = b;
         }
         Graphics gi = image.getGraphics();
-        paintBackground(gi);
+        if (focus != null) {
+            AffineTransform at = new AffineTransform();
+            if (focus != null && backgroundSize != null) {
+                at = new AffineTransform(at);
+                
+                subOffsetX = d.width/2-focus.getCenterX();
+                if(subOffsetX < -b.width+d.width) subOffsetX = -b.width+d.width;
+                if(subOffsetX > 0) subOffsetX = 0;
+                
+                subOffsetY = d.height/2-focus.getCenterY();
+                if(subOffsetY < -b.height+d.height) subOffsetY = -b.height+d.height;
+                if(subOffsetY > 0) subOffsetY = 0;
+                System.out.println("off y: "+subOffsetY+" "+focus.getCenterY());
+                
+                at.translate(subOffsetX, subOffsetY);
+                Graphics2D g2 = (Graphics2D) gi;
+                g2.setTransform(at);
+            }
+        }
+        _paintBackground(gi);
         paintSprites(gi);
         g.drawImage(image, 0, 0, this);
     }

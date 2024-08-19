@@ -5,8 +5,6 @@
  */
 package boardgame;
 
-import java.util.List;
-
 /**
  *
  * @author sbrandt

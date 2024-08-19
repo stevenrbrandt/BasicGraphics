@@ -38,10 +38,14 @@ public class Flyer {
         final SpriteComponent sc = new SpriteComponent() {
             @Override
             public void paintBackground(Graphics g) {
-                Dimension d = getSize();
-                g.setColor(Color.black);
+                System.out.println("Paint!");
+                Dimension d = getFullSize();
+                g.setColor(Color.blue);
                 g.fillRect(0, 0, d.width, d.height);
-                final int NUM_STARS = 30;
+                final int BORDER_SZ=10;
+                g.setColor(Color.black);
+                g.fillRect(BORDER_SZ, BORDER_SZ, d.width-2*BORDER_SZ, d.height-2*BORDER_SZ);
+                final int NUM_STARS = 300;
                 Random rand = new Random();
                 rand.setSeed(0);
                 g.setColor(Color.white);
@@ -83,6 +87,8 @@ public class Flyer {
         bc2.add("Flyer",sc);
         bf.show();
         final Falcon f = new Falcon(sc);
+        sc.setFocus(f);
+        sc.setBackgroundSize(new Dimension(1000,1000));
         final double INCR = Math.PI*2/100.0;
         // Note: Adding the listener to basic container 2.
         bc2.addKeyListener(new KeyAdapter() {   

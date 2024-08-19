@@ -8,7 +8,6 @@ package prog.game;
 import edu.lsu.cct.piraha.Grammar;
 import edu.lsu.cct.piraha.Group;
 import edu.lsu.cct.piraha.Matcher;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;

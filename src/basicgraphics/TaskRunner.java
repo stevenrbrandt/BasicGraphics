@@ -64,7 +64,6 @@ public class TaskRunner {
       // We don't want to lose information
       // about exceptions!
       // First provide to the console.
-      e.printStackTrace();
       // Next provide output to the GUI,
       // because the console may not be
       // visible.
@@ -73,5 +72,6 @@ public class TaskRunner {
       e.printStackTrace(pw);
       pw.close();
       JOptionPane.showMessageDialog(c, sw.toString());
+      System.out.print(sw.toString());
     }
 }

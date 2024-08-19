@@ -4,12 +4,6 @@
  */
 package basicgraphics;
 
-import java.lang.reflect.InvocationTargetException;
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 
 /**
@@ -29,9 +23,17 @@ public class Util {
     public static boolean eq(Object a, Object b) {
         if(a == b) return true;
         if(a == null || b == null) return false;
-        return a.equals(b);
+        if(a.getClass().isAssignableFrom(b.getClass()))
+            return b.equals(a);
+        else
+            return a.equals(b);
     }
     
+    /**
+     * This method immediately invokes runnable method r
+     * on the event dispatch thread.
+     * @param r 
+     */
     public static void invokeAndWait(Runnable r) {
         if(SwingUtilities.isEventDispatchThread())
             r.run();
