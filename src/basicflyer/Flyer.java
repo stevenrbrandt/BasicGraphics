@@ -45,7 +45,7 @@ public class Flyer {
                 final int BORDER_SZ=10;
                 g.setColor(Color.black);
                 g.fillRect(BORDER_SZ, BORDER_SZ, d.width-2*BORDER_SZ, d.height-2*BORDER_SZ);
-                final int NUM_STARS = 300;
+                final int NUM_STARS = 3000;
                 Random rand = new Random();
                 rand.setSeed(0);
                 g.setColor(Color.white);
@@ -88,7 +88,7 @@ public class Flyer {
         bf.show();
         final Falcon f = new Falcon(sc);
         sc.setFocus(f);
-        sc.setBackgroundSize(new Dimension(1000,1000));
+        sc.setBackgroundSize(new Dimension(3000,3000));
         final double INCR = Math.PI*2/100.0;
         // Note: Adding the listener to basic container 2.
         bc2.addKeyListener(new KeyAdapter() {   

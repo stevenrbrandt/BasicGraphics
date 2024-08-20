@@ -50,13 +50,13 @@ public class Falcon extends Sprite {
     public void processEvent(SpriteCollisionEvent se) {
         SpriteComponent sc = getSpriteComponent();
         if (se.xlo) {
-            setX(sc.getSize().width-getWidth());
+            setX(sc.getFullSize().width-getWidth());
         }
         if (se.xhi) {
             setX(0);
         }
         if (se.ylo) {
-            setY(sc.getSize().height-getHeight());
+            setY(sc.getFullSize().height-getHeight());
         }
         if (se.yhi) {
             setY(0);

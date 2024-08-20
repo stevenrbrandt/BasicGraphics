@@ -77,14 +77,30 @@ public class SpriteComponent extends JComponent implements MouseListener {
     public Dimension getFullSize() {
         return backgroundSize == null ? super.getSize() : backgroundSize;
     }
+    
+    double setMinMax(double value, double minv, double maxv) {
+        if(value < minv) value = minv;
+        if(value > maxv) value = maxv;
+        return value;
+    }
 
     public final void _paintBackground(Graphics g) {
         Dimension d = getSize();
         if (background != null) {
-            int ix = (int)(focus.getCenterX()-d.width/2);
-            int iy = (int)(focus.getCenterY()-d.height/2);
+            int sx1 = (int)(focus.getCenterX()-d.width/2);
+            sx1 = (int) setMinMax(sx1, 0, getFullSize().width - d.width);
+            int sy1 = (int)(focus.getCenterY()-d.height/2);
+            sy1 = (int) setMinMax(sy1, 0, getFullSize().height-d.height);
+            int dx1 = sx1;
+            int dy1 = sy1;
+            int sx2 = sx1 + d.width;
+            int sy2 = sy1 + d.height;
+            int dx2 = dx1 + d.width;
+            int dy2 = dy1 + d.height;
             //g.drawImage(background.getImage(),ix,iy, this);
-            g.drawImage(background.getImage(), 0, 0, this);
+            //g.drawImage(background.getImage(), 0, 0, this);
+            //g.fillRect(dx1, dy2, d.width, d.height);
+            g.drawImage(background.getImage(),dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, this);
         } else {
             g.setColor(Color.white);
             g.fillRect(0, 0, d.width, d.height);
