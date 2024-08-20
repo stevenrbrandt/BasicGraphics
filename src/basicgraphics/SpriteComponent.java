@@ -165,7 +165,6 @@ public class SpriteComponent extends JComponent implements MouseListener {
                 subOffsetY = d.height/2-focus.getCenterY();
                 if(subOffsetY < -b.height+d.height) subOffsetY = -b.height+d.height;
                 if(subOffsetY > 0) subOffsetY = 0;
-                System.out.println("off y: "+subOffsetY+" "+focus.getCenterY());
                 
                 at.translate(subOffsetX, subOffsetY);
                 Graphics2D g2 = (Graphics2D) gi;
@@ -281,7 +280,7 @@ public class SpriteComponent extends JComponent implements MouseListener {
 
     private void moveSprites_() {
         assert SwingUtilities.isEventDispatchThread();
-        Dimension d = getSize();
+        Dimension d = getFullSize();
         if (d.width == 0 || d.height == 0) {
             return;
         }

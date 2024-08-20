@@ -3,6 +3,8 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
+            <file>file:/C:/Users/steve/repos/BasicGraphics/src/basicgraphics/BasicFrame.java</file>
+            <file>file:/C:/Users/steve/repos/BasicGraphics/src/basicflyer/Falcon.java</file>
             <file>file:/C:/Users/steve/repos/BasicGraphics/src/boardgame/Game.java</file>
             <file>file:/C:/Users/steve/repos/BasicGraphics/src/prog/game/Game2.java</file>
             <file>file:/C:/Users/steve/repos/BasicGraphics/src/basicgraphics/Util.java</file>
@@ -11,8 +13,8 @@
             <file>file:/C:/Users/steve/repos/BasicGraphics/src/basicgraphics/Sprite.java</file>
             <file>file:/C:/Users/steve/repos/BasicGraphics/src/prog/game/ProgSpriteComponent.java</file>
             <file>file:/C:/Users/steve/repos/BasicGraphics/src/boardgame/Board.java</file>
-            <file>file:/C:/Users/steve/repos/BasicGraphics/src/basicgraphics/SpriteComponent.java</file>
             <file>file:/C:/Users/steve/repos/BasicGraphics/src/prog/game/Dice.java</file>
+            <file>file:/C:/Users/steve/repos/BasicGraphics/src/basicflyer/Flyer.java</file>
         </group>
     </open-files>
 </project-private>
