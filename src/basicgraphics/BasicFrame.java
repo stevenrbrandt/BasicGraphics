@@ -47,6 +47,8 @@ public class BasicFrame {
     GridBagConstraints gbc = new GridBagConstraints();
     ArrayList<ArrayList<String>> cells = new ArrayList<>();
     boolean isDisposed = false;
+    
+    public final static Dimension FRAME_SIZE=new Dimension(1100,650);
 
     /**
      * The title will be displayed on the top of the
@@ -56,6 +58,7 @@ public class BasicFrame {
     public BasicFrame(String title) {
         jf = new JFrame(title);
         jf.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        jf.setPreferredSize(FRAME_SIZE);
         jf.setLayout(gbl);
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;

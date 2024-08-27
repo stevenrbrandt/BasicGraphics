@@ -189,6 +189,17 @@ public class Sprite implements MouseListener, Comparable<Sprite> {
         } else if(x < 0 && velx < 0) {
             xlo = true;
         }
+        if(this.component.periodic) {
+            Picture bg = this.component.background;
+            Dimension full = bg.getSize();
+            if(x > full.width) x -= full.width;
+            else if(x < 0) x += full.width;
+            if(y > full.height) y -= full.height;
+            else if(y < 0) {
+                y += full.height;
+            }
+            return;
+        }
         
         if(x > d.width) {
             xhi = true;
@@ -339,9 +350,9 @@ public class Sprite implements MouseListener, Comparable<Sprite> {
         return r;
     }
 
-    AffineTransform getTransform() {
-        AffineTransform af = new AffineTransform();
-        af.translate(getX(),getY());
+    AffineTransform getTransform(AffineTransform old, int tx,int ty) {
+        AffineTransform af = new AffineTransform(old);
+        af.translate(getX()+tx,getY()+ty);
         if(freezeOrientation)
             return af;
         af.rotate(heading+headingOffset, getWidth()/2, getHeight()/2);

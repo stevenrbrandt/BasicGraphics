@@ -38,26 +38,35 @@ public class Flyer {
         final SpriteComponent sc = new SpriteComponent() {
             @Override
             public void paintBackground(Graphics g) {
-                System.out.println("Paint!");
                 Dimension d = getFullSize();
-                g.setColor(Color.blue);
-                g.fillRect(0, 0, d.width, d.height);
                 final int BORDER_SZ=10;
+                // 0 . . . . . 0
+                // . 1 . . . 1 0
+                // . . . . . . .
+                // . 1 . . . 1 .
+                // 0 . . . . . 0
+                g.setColor(Color.blue);
+                g.fillRect(0, 0, d.width-BORDER_SZ, BORDER_SZ);
+                g.setColor(Color.pink);
+                g.fillRect(d.width-BORDER_SZ, 0, BORDER_SZ, d.height-BORDER_SZ);
+                g.setColor(Color.cyan);
+                g.fillRect(0, d.height-BORDER_SZ, d.width, BORDER_SZ);
+                g.setColor(Color.orange);
+                g.fillRect(0, BORDER_SZ, BORDER_SZ, d.height);
                 g.setColor(Color.black);
                 g.fillRect(BORDER_SZ, BORDER_SZ, d.width-2*BORDER_SZ, d.height-2*BORDER_SZ);
-                final int NUM_STARS = 3000;
+                final int NUM_STARS = 9000;
                 Random rand = new Random();
                 rand.setSeed(0);
                 g.setColor(Color.white);
                 for(int i=0;i<NUM_STARS;i++) {
                     int diameter = rand.nextInt(5)+1;
-                    int xpos = rand.nextInt(d.width);
-                    int ypos = rand.nextInt(d.height);
+                    int xpos = (int)(rand.nextGaussian()*d.width/2);
+                    int ypos = (int)(rand.nextGaussian()*d.height/2);
                     g.fillOval(xpos, ypos, diameter, diameter);
                 }
             }
         };
-        sc.setPreferredSize(new Dimension(800,400));
         String[][] splashLayout = {
             {"Title"},
             {"Button"},
@@ -75,7 +84,7 @@ public class Flyer {
                 bc2.requestFocus();
                 
                 // Start the timer
-                ClockWorker.initialize(5);
+                ClockWorker.initialize(2);
             }
         });
         bc1.add("Button",jstart);
@@ -88,7 +97,7 @@ public class Flyer {
         bf.show();
         final Falcon f = new Falcon(sc);
         sc.setFocus(f);
-        sc.setBackgroundSize(new Dimension(3000,3000));
+        sc.setBackgroundSize(new Dimension(10000,8000));
         final double INCR = Math.PI*2/100.0;
         // Note: Adding the listener to basic container 2.
         bc2.addKeyListener(new KeyAdapter() {   

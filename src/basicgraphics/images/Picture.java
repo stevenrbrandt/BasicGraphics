@@ -15,18 +15,13 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 import java.util.Map;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -42,6 +37,11 @@ public class Picture extends JComponent {
     private BufferedImage image;
     private int width, height;
     boolean[][] mask;
+    
+    @Override
+    public Dimension getSize() {
+        return new Dimension(width, height);
+    }
 
     /**
      * Set all white pixels to transparent

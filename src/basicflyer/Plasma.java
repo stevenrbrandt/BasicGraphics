@@ -52,6 +52,6 @@ public class Plasma extends Sprite {
      */
     @Override
     public void processEvent(SpriteCollisionEvent se) {
-        setActive(false);
+        //setActive(false);
     }
 }

@@ -60,7 +60,9 @@ public class SpriteComponent extends JComponent implements MouseListener {
     }
 
     public SpriteComponent() {
-        setPreferredSize(new Dimension(100, 100));
+        int m = 50;
+        setPreferredSize(new Dimension(BasicFrame.FRAME_SIZE.width-m, BasicFrame.FRAME_SIZE.height-m));
+        setMinimumSize(new Dimension(300,300));
         addMouseListener(this);
     }
 
@@ -83,24 +85,102 @@ public class SpriteComponent extends JComponent implements MouseListener {
         if(value > maxv) value = maxv;
         return value;
     }
+    
+    boolean periodic = true;
 
-    public final void _paintBackground(Graphics g) {
+    final void _paintBackground(Graphics g, PaintRegion pr) {
         Dimension d = getSize();
         if (background != null) {
-            int sx1 = (int)(focus.getCenterX()-d.width/2);
-            sx1 = (int) setMinMax(sx1, 0, getFullSize().width - d.width);
-            int sy1 = (int)(focus.getCenterY()-d.height/2);
-            sy1 = (int) setMinMax(sy1, 0, getFullSize().height-d.height);
-            int dx1 = sx1;
-            int dy1 = sy1;
-            int sx2 = sx1 + d.width;
-            int sy2 = sy1 + d.height;
-            int dx2 = dx1 + d.width;
-            int dy2 = dy1 + d.height;
-            //g.drawImage(background.getImage(),ix,iy, this);
-            //g.drawImage(background.getImage(), 0, 0, this);
-            //g.fillRect(dx1, dy2, d.width, d.height);
-            g.drawImage(background.getImage(),dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, this);
+            Dimension full = getFullSize();
+            int fwidth = full.width - d.width;
+            int fheight = full.height - d.height;
+            int fw = full.width;
+            int fh = full.height;
+            int sx1 = (int) (focus.getCenterX() - d.width / 2);
+            int sy1 = (int) (focus.getCenterY() - d.height / 2);
+            int ux1 = sx1 + d.width;
+            int uy1 = sy1 + d.height;
+            // Region:
+            // outside 
+            if(periodic) {
+                int px = 0, py = 0;
+                if(sx1 < 0) px = -1;
+                else if(ux1 >= fw) px = 1;
+                if(sy1 < 0) py = -1;
+                else if(uy1 > fh) py = 1;
+                if (px == 0 && py == 0) {
+                    pr.paintRegion(g, sx1, sy1, ux1, uy1, sx1, sy1, ux1, uy1);
+                } else if (px < 0 && py < 0) {
+                    pr.paintRegion(g, sx1, sy1, 0, 0,
+                            sx1+fw, sy1+fh, fw, fh);
+                    pr.paintRegion(g, 0, 0, ux1, uy1,
+                            0, 0, ux1, uy1);
+                    pr.paintRegion(g, 0, sy1, ux1, 0,
+                            0, sy1+fh, ux1, fh);
+                    pr.paintRegion(g, sx1, 0, 0, uy1,
+                            sx1+fw, 0, fw, uy1);
+                } else if(px < 0 && py == 0) {
+                    pr.paintRegion(g, sx1, sy1, 0, uy1,
+                            sx1+fw, sy1, fw, uy1);
+                    pr.paintRegion(g, 0, sy1, ux1, uy1,
+                            0, sy1, ux1, uy1);
+                } else if(px == 0 && py < 0) {
+                    pr.paintRegion(g, sx1, sy1, ux1, 0, 
+                            sx1, sy1+fh, ux1, fh);
+                    pr.paintRegion(g, sx1, 0, ux1, uy1, 
+                            sx1, 0, ux1, uy1);
+                } else if (px > 0 && py > 0) {
+                    pr.paintRegion(g, sx1, sy1, fw, fh,
+                            sx1, sy1, fw, fh);
+                    pr.paintRegion(g, fw, fh, ux1, uy1,
+                            0, 0, ux1-fw, uy1-fh);
+                    pr.paintRegion(g, fw, sy1, ux1, fh,
+                            0, sy1, ux1 - fw, fh);
+                    pr.paintRegion(g, sx1, fh, fw, uy1,
+                            sx1, 0, fw, uy1 - fh);
+                } else if (px > 0 && py == 0) {
+                    pr.paintRegion(g, sx1, sy1, fw, uy1,
+                            sx1, sy1, fw, uy1);
+                    pr.paintRegion(g, fw, sy1, ux1, uy1,
+                            0, sy1, ux1-fw, uy1);
+                } else if (px == 0 && py > 0) {
+                    pr.paintRegion(g, sx1, sy1, ux1, fh,
+                            sx1, sy1, ux1, fh);
+                    pr.paintRegion(g, sx1, fh, ux1, uy1,
+                            sx1, 0, ux1, uy1-fh);
+                } else if (px < 0 && py > 0) {
+                    pr.paintRegion(g, 0, sy1, ux1, fh,
+                            0, sy1, ux1, fh);
+                    pr.paintRegion(g, 0, fh, ux1, uy1,
+                            0, 0, ux1, uy1-fh);
+                    pr.paintRegion(g, sx1, sy1, 0, fh,
+                            sx1+fw, sy1, fw, fh);
+                    pr.paintRegion(g, sx1, fh, 0, uy1,
+                            sx1+fw, 0, fw, uy1-fh);
+                } else if (px > 0 && py < 0) {
+                    pr.paintRegion(g, sx1, 0, fw, uy1,
+                            sx1, 0, fw, uy1);
+                    pr.paintRegion(g, sx1, sy1, fw, 0,
+                            sx1, sy1+fh, fw, fh);
+                    pr.paintRegion(g, fw, 0, ux1, uy1,
+                            0, 0, ux1-fw, uy1);
+                    pr.paintRegion(g, fw, sy1, ux1, 0,
+                            0, sy1+fh, ux1-fw, fh);
+                } else {
+                    g.setColor(Color.red);
+                    g.fillRect(sx1, sy1, d.width, d.height);
+                }
+            } else {
+                sx1 = (int) setMinMax(sx1, 0, fwidth);
+                sy1 = (int) setMinMax(sy1, 0, fheight);
+                int dx1 = sx1;
+                int dy1 = sy1;
+                int sx2 = sx1 + d.width;
+                int sy2 = sy1 + d.height;
+                int dx2 = dx1 + d.width;
+                int dy2 = dy1 + d.height;
+                pr.paintRegion(g, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2);
+            }
         } else {
             g.setColor(Color.white);
             g.fillRect(0, 0, d.width, d.height);
@@ -112,33 +192,18 @@ public class SpriteComponent extends JComponent implements MouseListener {
     public void setOffsetY(int y) { offsetY = y; }
     public int getOffsetY() { return offsetY; }
     
-    boolean drawBox = false;
-    public boolean setDrawBox(boolean b) {
-        boolean oldValue = drawBox;
+    Color drawBox = null;
+    /**
+     * This is a debugging tool.
+     * Pass a color to draw a box of that color around sprites.
+     * Pass null to turn off drawing a box around sprites.
+     * @param b
+     * @return 
+     */
+    public Color setDrawBox(Color b) {
+        Color oldValue = drawBox;
         drawBox = b;
         return oldValue;
-    }
-
-    public final void paintSprites(final Graphics g_) {
-        Runnable run = ()->{
-            Graphics2D g = (Graphics2D) g_;
-            //Collections.sort(sprites, DRAWING_PRIORITY);
-            for (Sprite sprite : new ArrayList<>(sprites)) {
-                if (!sprite.is_visible) {
-                    continue;
-                }
-                AffineTransform at = sprite.getTransform();
-                g.drawImage(sprite.getPicture().getImage(), at, null);
-                if (drawBox) {
-                    g.setTransform(at);
-                    g.setColor(Color.black);
-                    int w = (int) sprite.getWidth();
-                    int h = (int) sprite.getHeight();
-                    g.draw(new Rectangle(2, 2, w - 1, h - 1));
-                }
-            }
-        };
-        Util.invokeAndWait(run);
     }
     
     public boolean scroll(int x,int y,int s) {
@@ -175,20 +240,60 @@ public class SpriteComponent extends JComponent implements MouseListener {
                 at = new AffineTransform(at);
                 
                 subOffsetX = d.width/2-focus.getCenterX();
-                if(subOffsetX < -b.width+d.width) subOffsetX = -b.width+d.width;
-                if(subOffsetX > 0) subOffsetX = 0;
+                if(!periodic) {
+                    subOffsetX = setMinMax(subOffsetX,  -b.width+d.width,0);
+                }
                 
                 subOffsetY = d.height/2-focus.getCenterY();
-                if(subOffsetY < -b.height+d.height) subOffsetY = -b.height+d.height;
-                if(subOffsetY > 0) subOffsetY = 0;
+                if(!periodic) {
+                    subOffsetY = setMinMax(subOffsetY, -b.height+d.height, 0);
+                }
                 
                 at.translate(subOffsetX, subOffsetY);
                 Graphics2D g2 = (Graphics2D) gi;
                 g2.setTransform(at);
             }
         }
-        _paintBackground(gi);
-        paintSprites(gi);
+        PaintRegion pr = new PaintRegion() {
+            @Override
+            public void paintRegion(Graphics g, int sx1, int sy1, int sx2, int sy2,
+                    int dx1, int dy1, int dx2, int dy2) {
+                g.drawImage(background.getImage(), sx1, sy1, sx2, sy2,
+                        dx1, dy1, dx2, dy2, null);
+            }
+        };
+        _paintBackground(gi,pr);
+        PaintRegion sp = new PaintRegion() {
+            @Override
+            public void paintRegion(Graphics g_, int sx1, int sy1, int sx2, int sy2, 
+                    int dx1, int dy1, int dx2, int dy2) {
+                Graphics2D g = (Graphics2D) g_;
+                for (Sprite sprite : new ArrayList<>(sprites)) {
+                    if (!sprite.is_visible) {
+                        continue;
+                    }
+                    int cw = (int) sprite.getWidth()/2;
+                    int ch = (int) sprite.getHeight()/2;
+                    int cx = (int) sprite.getCenterX();
+                    int cy = (int) sprite.getCenterY();
+                    if (cx + cw < dx1 || cx - cw > dx2 || cy + ch < dy1 || cy - ch > dy2) {
+                        continue;
+                    }
+                    AffineTransform old = g.getTransform();
+                    AffineTransform at = sprite.getTransform(old, sx1 - dx1, sy1 - dy1);
+                    g.setTransform(at);
+                    g.drawImage(sprite.getPicture().getImage(), 0, 0, null);
+                    if (drawBox != null) {
+                        g.setColor(drawBox);
+                        int w = (int) sprite.getWidth();
+                        int h = (int) sprite.getHeight();
+                        g.draw(new Rectangle(2, 2, w - 1, h - 1));
+                    }
+                    g.setTransform(old);
+                }
+            }
+        };
+        _paintBackground(gi,sp);
         g.drawImage(image, 0, 0, this);
     }
 
@@ -280,7 +385,7 @@ public class SpriteComponent extends JComponent implements MouseListener {
                     ei.put(nv.getKey(),nv.getValue()-1);
                 }
             }
-            if(ei.size()==0)
+            if(ei.isEmpty())
                 i1.remove();
         }
     }
