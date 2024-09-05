@@ -10,6 +10,7 @@ import basicgraphics.Card;
 import basicgraphics.ClockWorker;
 import basicgraphics.SpriteComponent;
 import basicgraphics.Task;
+import basicgraphics.images.Picture;
 import basicgraphics.sounds.ReusableClip;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -36,7 +37,7 @@ public class Flyer {
         final ReusableClip clip = new ReusableClip("beep.wav");
         final ReusableClip boom = new ReusableClip("die.wav");
         final BasicFrame bf = new BasicFrame("Flyer");
-        Card bc1 = bf.getCard();
+        Card bc1 = bf.getCard(new Picture("freespace.png"));
         final Card bc2 = bf.getCard();
         final SpriteComponent sc = new SpriteComponent() {
             @Override
