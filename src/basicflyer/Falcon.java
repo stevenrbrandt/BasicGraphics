@@ -17,7 +17,7 @@ import java.awt.Dimension;
  */
 public class Falcon extends Sprite {
     public Picture initialPic;
-    public final static double FAC = .3;
+    public final static double FAC = .9;
     /**
      * Initializes the sprite, setting its picture,
      * position, and speed. It also adds it to the

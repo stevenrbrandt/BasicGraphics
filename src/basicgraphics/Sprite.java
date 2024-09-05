@@ -118,15 +118,15 @@ public class Sprite implements MouseListener, Comparable<Sprite> {
     public boolean isActive() { return active; }
     public void setActive(boolean a) { active = a; }
     
-    public void setPicture(Picture p) {
-        if (p == null) {
+    public void setPicture(Picture new_p) {
+        if (new_p == null) {
             throw new NullPointerException("Can't set a null picture");
         }
-        this.p = p;
-        int delx = p.getWidth() - this.p.getWidth();
-        int dely = p.getHeight() - this.p.getHeight();
-        setX(getX() - delx / 2);
-        setY(getY() - dely / 2);
+        double delx = p == null ? 0 : new_p.getWidth() - p.getWidth();
+        double dely = p == null ? 0 : new_p.getHeight() - p.getHeight();
+        this.p = new_p;
+        setX(getX() - delx/2);
+        setY(getY() - dely/2);
         if(!added) {
             component.addSprite(this);
             added = true;
@@ -183,43 +183,57 @@ public class Sprite implements MouseListener, Comparable<Sprite> {
         y += vely;
         boolean invis = false;
         boolean xlo=false, xhi=false, ylo=false, yhi=false;
-        if(x < -getWidth()) {
-            xlo = true;
-            invis = true;
-        } else if(x < 0 && velx < 0) {
-            xlo = true;
-        }
-        if(this.component.periodic) {
+        if(this.component.periodic_x || this.component.periodic_y) {
             Picture bg = this.component.background;
-            Dimension full = bg.getSize();
-            if(x > full.width) x -= full.width;
-            else if(x < 0) x += full.width;
-            if(y > full.height) y -= full.height;
-            else if(y < 0) {
-                y += full.height;
+            if (bg != null) {
+                Dimension full = bg.getSize();
+                if (this.component.periodic_x) {
+                    if (x > full.width) {
+                        x -= full.width;
+                    } else if (x < 0) {
+                        x += full.width;
+                    }
+                }
+                if (this.component.periodic_y) {
+                    if (y > full.height) {
+                        y -= full.height;
+                    } else if (y < 0) {
+                        y += full.height;
+                    }
+                }
             }
-            return;
         }
         
-        if(x > d.width) {
-            xhi = true;
-            invis = true;
-        } else if(x+getWidth() > d.width && velx > 0) {
-            xhi = true;
+        if (!this.component.periodic_x) {
+            if (x < -getWidth()) {
+                xlo = true;
+                invis = true;
+            } else if (x < 0 && velx < 0) {
+                xlo = true;
+            }
+
+            if (x > d.width) {
+                xhi = true;
+                invis = true;
+            } else if (x + getWidth()> d.width && velx > 0) {
+                xhi = true;
+            }
         }
-        
-        if(y < -getHeight()) {
-            ylo = true;
-            invis = true;
-        } else if(y < 0 && vely < 0) {
-            ylo = true;
-        }
-        
-        if(y > d.height) {
-            yhi = true;
-            invis = true;
-        } else if(y+getHeight() > d.height && vely > 0) {
-            yhi = true;
+
+        if (!this.component.periodic_y) {
+            if (y < -getHeight()) {
+                ylo = true;
+                invis = true;
+            } else if (y < 0 && vely < 0) {
+                ylo = true;
+            }
+
+            if (y > d.height) {
+                yhi = true;
+                invis = true;
+            } else if (y + getHeight() > d.height && vely > 0) {
+                yhi = true;
+            }
         }
         
         if(xlo || xhi || ylo || yhi) {

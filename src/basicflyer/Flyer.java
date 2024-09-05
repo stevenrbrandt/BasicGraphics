@@ -9,6 +9,7 @@ import basicgraphics.BasicFrame;
 import basicgraphics.Card;
 import basicgraphics.ClockWorker;
 import basicgraphics.SpriteComponent;
+import basicgraphics.Task;
 import basicgraphics.sounds.ReusableClip;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -30,8 +31,10 @@ import javax.swing.JLabel;
  * @author sbrandt
  */
 public class Flyer {
+    public final static int PLASMA_SIZE=10;
     public static void main(String[] args) throws IOException {
         final ReusableClip clip = new ReusableClip("beep.wav");
+        final ReusableClip boom = new ReusableClip("die.wav");
         final BasicFrame bf = new BasicFrame("Flyer");
         Card bc1 = bf.getCard();
         final Card bc2 = bf.getCard();
@@ -84,7 +87,7 @@ public class Flyer {
                 bc2.requestFocus();
                 
                 // Start the timer
-                ClockWorker.initialize(2);
+                ClockWorker.initialize(7);
             }
         });
         bc1.add("Button",jstart);
@@ -97,7 +100,12 @@ public class Flyer {
         bf.show();
         final Falcon f = new Falcon(sc);
         sc.setFocus(f);
+        
+        // Set the screen behavior
         sc.setBackgroundSize(new Dimension(10000,8000));
+        //sc.periodic_y = true;
+        sc.periodic_x = true;
+        
         final double INCR = Math.PI*2/100.0;
         // Note: Adding the listener to basic container 2.
         bc2.addKeyListener(new KeyAdapter() {   
@@ -108,10 +116,27 @@ public class Flyer {
                 } else if(ke.getKeyCode() == KeyEvent.VK_LEFT) {
                     f.turn(-INCR);
                 } else if(ke.getKeyChar() == ' ') {
-                    Plasma pl = new Plasma(sc);
+                    final Plasma pl = new Plasma(sc);
                     pl.setVel(f.getVelX()*2, f.getVelY()*2);
                     pl.setCenterX(f.centerX());
                     pl.setCenterY(f.centerY());
+                    final int steps = 225, bloom = 30;
+                    ClockWorker.addTask(new Task(steps) {
+                        @Override
+                        public void run() {
+                            if(iteration() + bloom >= maxIteration()) {
+                                Color c = Color.white;
+                                if(iteration() + bloom/4 < maxIteration())
+                                    c = Color.yellow;
+                                pl.setPicture(
+                                    Plasma.makeBall(c,PLASMA_SIZE + iteration()-steps+bloom));
+                            }
+                            if(iteration() == maxIteration()) {
+                                pl.setActive(false);
+                                boom.play();
+                            }
+                        }
+                    });
                     clip.play();
                 }
             }

@@ -86,9 +86,10 @@ public class SpriteComponent extends JComponent implements MouseListener {
         return value;
     }
     
-    boolean periodic = true;
+    public boolean periodic_x = false;
+    public boolean periodic_y = false;
 
-    final void _paintBackground(Graphics g, PaintRegion pr) {
+    final void paintRegion(Graphics g, PaintRegion pr) {
         Dimension d = getSize();
         if (background != null) {
             Dimension full = getFullSize();
@@ -102,11 +103,23 @@ public class SpriteComponent extends JComponent implements MouseListener {
             int uy1 = sy1 + d.height;
             // Region:
             // outside 
-            if(periodic) {
+            if(periodic_x || periodic_y) {
                 int px = 0, py = 0;
-                if(sx1 < 0) px = -1;
+                if(periodic_x == false) {
+                    px = 0;
+                    if(sx1 < 0) sx1 = 0;
+                    else if(sx1 > fwidth) sx1 = fwidth;
+                    ux1 = sx1 + d.width;
+                }
+                else if(sx1 < 0) px = -1;
                 else if(ux1 >= fw) px = 1;
-                if(sy1 < 0) py = -1;
+                if(periodic_y == false) {
+                    py = 0;
+                    if(sy1 < 0) sy1 = 0;
+                    else if(sy1 > fheight) sy1 = fheight;
+                    uy1 = sy1 + d.height;
+                }
+                else if(sy1 < 0) py = -1;
                 else if(uy1 > fh) py = 1;
                 if (px == 0 && py == 0) {
                     pr.paintRegion(g, sx1, sy1, ux1, uy1, sx1, sy1, ux1, uy1);
@@ -182,8 +195,7 @@ public class SpriteComponent extends JComponent implements MouseListener {
                 pr.paintRegion(g, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2);
             }
         } else {
-            g.setColor(Color.white);
-            g.fillRect(0, 0, d.width, d.height);
+            pr.paintRegion(g, 0, 0, d.width, d.height, 0, 0, d.width, d.height);
         }
     }
     
@@ -240,12 +252,12 @@ public class SpriteComponent extends JComponent implements MouseListener {
                 at = new AffineTransform(at);
                 
                 subOffsetX = d.width/2-focus.getCenterX();
-                if(!periodic) {
+                if(!periodic_x) {
                     subOffsetX = setMinMax(subOffsetX,  -b.width+d.width,0);
                 }
                 
                 subOffsetY = d.height/2-focus.getCenterY();
-                if(!periodic) {
+                if(!periodic_y) {
                     subOffsetY = setMinMax(subOffsetY, -b.height+d.height, 0);
                 }
                 
@@ -258,11 +270,18 @@ public class SpriteComponent extends JComponent implements MouseListener {
             @Override
             public void paintRegion(Graphics g, int sx1, int sy1, int sx2, int sy2,
                     int dx1, int dy1, int dx2, int dy2) {
-                g.drawImage(background.getImage(), sx1, sy1, sx2, sy2,
-                        dx1, dy1, dx2, dy2, null);
+                Dimension d = getSize();
+                if (background != null) {
+                    g.drawImage(background.getImage(), sx1, sy1, sx2, sy2,
+                            dx1, dy1, dx2, dy2, null);
+                } else {
+                    //g.setColor(Color.white);
+                    //g.fillRect(0, 0, d.width, d.height);
+                    paintBackground(g);
+                }
             }
         };
-        _paintBackground(gi,pr);
+        paintRegion(gi,pr);
         PaintRegion sp = new PaintRegion() {
             @Override
             public void paintRegion(Graphics g_, int sx1, int sy1, int sx2, int sy2, 
@@ -293,7 +312,7 @@ public class SpriteComponent extends JComponent implements MouseListener {
                 }
             }
         };
-        _paintBackground(gi,sp);
+        paintRegion(gi,sp);
         g.drawImage(image, 0, 0, this);
     }
 

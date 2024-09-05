@@ -42,7 +42,7 @@ public class Plasma extends Sprite {
      */
     public Plasma(SpriteComponent sc) {
         super(sc);
-        setPicture(makeBall(Color.red, 10));
+        setPicture(makeBall(Color.red, Flyer.PLASMA_SIZE));
     }
 
     /**
