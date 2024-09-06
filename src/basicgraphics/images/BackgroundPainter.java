@@ -14,7 +14,7 @@ import java.awt.Graphics;
  */
 public class BackgroundPainter implements Painter {
 
-    private final Picture background;
+    public final Picture background;
 
     public BackgroundPainter(Picture p) {
         background = p;

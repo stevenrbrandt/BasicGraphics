@@ -11,6 +11,7 @@ import basicgraphics.Card;
 import basicgraphics.ClockWorker;
 import basicgraphics.SpriteComponent;
 import basicgraphics.Task;
+import basicgraphics.images.Painter;
 import basicgraphics.images.Picture;
 import basicgraphics.sounds.ReusableClip;
 import java.awt.Color;
@@ -41,10 +42,9 @@ public class Flyer {
         Card bc1 = bf.getCard();
         bc1.setPainter(new BackgroundPainter(new Picture("freespace.png")));
         final Card bc2 = bf.getCard();
-        final SpriteComponent sc = new SpriteComponent() {
+        Painter painter = new Painter() {
             @Override
-            public void paintBackground(Graphics g) {
-                Dimension d = getFullSize();
+            public void paint(Graphics g, Dimension d) {
                 final int BORDER_SZ=10;
                 // 0 . . . . . 0
                 // . 1 . . . 1 0
@@ -61,18 +61,22 @@ public class Flyer {
                 g.fillRect(0, BORDER_SZ, BORDER_SZ, d.height);
                 g.setColor(Color.black);
                 g.fillRect(BORDER_SZ, BORDER_SZ, d.width-2*BORDER_SZ, d.height-2*BORDER_SZ);
-                final int NUM_STARS = 9000;
+                final int NUM_STARS = d.width*d.height/500;
                 Random rand = new Random();
                 rand.setSeed(0);
                 g.setColor(Color.white);
                 for(int i=0;i<NUM_STARS;i++) {
                     int diameter = rand.nextInt(5)+1;
-                    int xpos = (int)(rand.nextGaussian()*d.width/2);
-                    int ypos = (int)(rand.nextGaussian()*d.height/2);
+                    int xpos = (int)(rand.nextDouble()*d.width);
+                    int ypos = (int)(rand.nextDouble()*d.height);
                     g.fillOval(xpos, ypos, diameter, diameter);
                 }
+            
             }
+            
         };
+        final SpriteComponent sc = new SpriteComponent();
+        sc.setPainter(painter);
         String[][] splashLayout = {
             {"Title"},
             {"Button"},
@@ -105,9 +109,9 @@ public class Flyer {
         sc.setFocus(f);
         
         // Set the screen behavior
-        sc.setBackgroundSize(new Dimension(10000,8000));
+        //sc.setBackgroundSize(new Dimension(10000,8000));
         //sc.periodic_y = true;
-        sc.periodic_x = true;
+        //sc.periodic_x = true;
         
         final double INCR = Math.PI*2/100.0;
         // Note: Adding the listener to basic container 2.

@@ -5,6 +5,8 @@
  */
 package basicgraphics;
 
+import basicgraphics.images.BackgroundPainter;
+import basicgraphics.images.Painter;
 import basicgraphics.images.Picture;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -51,10 +53,6 @@ public class SpriteComponent extends JComponent implements MouseListener {
             System.out.println("Image size: "+d);
         }
     }
-    public void setPicture(Picture p) {
-        background = p;
-        setBackgroundSize(p.getSize());
-    }
     public void setFocus(Sprite s) {
         focus = s;
     }
@@ -71,9 +69,13 @@ public class SpriteComponent extends JComponent implements MouseListener {
     }
 
     public void paintBackground(Graphics g) {
-        Dimension d = getSize();
-        g.setColor(Color.white);
-        g.fillRect(0, 0, d.width, d.height);
+        Dimension d = getFullSize();
+        if (painter == null) {
+            g.setColor(Color.white);
+            g.fillRect(0, 0, d.width, d.height);
+        } else {
+            painter.paint(g, d);
+        }
     }
     
     public Dimension getFullSize() {
@@ -240,7 +242,7 @@ public class SpriteComponent extends JComponent implements MouseListener {
         Dimension d = getSize();
         Dimension b = backgroundSize;
         if(b == null) b = d;
-        //image = null;
+        // image = null;
         if (image == null || sz.width != b.width || sz.height != b.height) {
             image = createImage(b.width, b.height);
             sz = b;
@@ -648,5 +650,13 @@ public class SpriteComponent extends JComponent implements MouseListener {
             }
         }
         return false;
+    }
+    
+    private Painter painter = null;
+    public void setPainter(Painter p) {
+        painter = p;
+    }
+    public Painter getPainter() {
+        return painter;
     }
 }
