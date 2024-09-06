@@ -85,14 +85,6 @@ public class BasicFrame {
     }
     public final static CardLayout cards = new CardLayout();
     static int cardNum = 0;
-    public Card getCard(Picture p) {
-        Container content = getContentPane();
-        content.setLayout(cards);
-        String name = "card"+(cardNum++);
-        Card card = new Card(name,p);
-        content.add(card, name);
-        return card;
-    }
     public Card getCard() {
         Container content = getContentPane();
         content.setLayout(cards);

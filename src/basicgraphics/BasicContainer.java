@@ -5,8 +5,10 @@
  */
 package basicgraphics;
 
+import basicgraphics.images.Painter;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.ArrayList;
@@ -130,5 +132,20 @@ public class BasicContainer extends Container {
             }
             layout[i] = row2;
         }
+    }
+    
+    private Painter painter = null;
+    public void setPainter(Painter p) {
+        painter = p;
+    }
+    public Painter getPainter() {
+        return painter;
+    }
+    
+    @Override
+    public void paint(Graphics g) {
+        if(painter != null)
+            painter.paint(g, getSize());
+        super.paint(g);
     }
 }

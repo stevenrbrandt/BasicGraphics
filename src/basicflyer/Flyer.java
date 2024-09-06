@@ -5,6 +5,7 @@
  */
 package basicflyer;
 
+import basicgraphics.images.BackgroundPainter;
 import basicgraphics.BasicFrame;
 import basicgraphics.Card;
 import basicgraphics.ClockWorker;
@@ -37,7 +38,8 @@ public class Flyer {
         final ReusableClip clip = new ReusableClip("beep.wav");
         final ReusableClip boom = new ReusableClip("die.wav");
         final BasicFrame bf = new BasicFrame("Flyer");
-        Card bc1 = bf.getCard(new Picture("freespace.png"));
+        Card bc1 = bf.getCard();
+        bc1.setPainter(new BackgroundPainter(new Picture("freespace.png")));
         final Card bc2 = bf.getCard();
         final SpriteComponent sc = new SpriteComponent() {
             @Override
