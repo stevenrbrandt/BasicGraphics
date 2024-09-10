@@ -83,7 +83,9 @@ public class Flyer {
             {"Button2"}
         };
         bc1.setStringLayout(splashLayout);
-        bc1.add("Title",new JLabel("Flyer Game"));
+        JLabel title = new JLabel("Flyer Game");
+        title.setForeground(Color.white);
+        bc1.add(title);
         JButton jstart = new JButton("Start");
         jstart.addActionListener(new ActionListener() {
             @Override
@@ -119,9 +121,9 @@ public class Flyer {
             @Override
             public void keyPressed(KeyEvent ke) {
                 if(ke.getKeyCode() == KeyEvent.VK_RIGHT) {
-                    f.turn( INCR);
+                    f.rotate( INCR);
                 } else if(ke.getKeyCode() == KeyEvent.VK_LEFT) {
-                    f.turn(-INCR);
+                    f.rotate(-INCR);
                 } else if(ke.getKeyChar() == ' ') {
                     final Plasma pl = new Plasma(sc);
                     pl.setVel(f.getVelX()*2, f.getVelY()*2);

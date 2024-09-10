@@ -35,11 +35,6 @@ public class Falcon extends Sprite {
         setVel(FAC, 0);
     }
     
-    public void turn(double incr) {
-        rotate(incr);
-        //setPicture(initialPic.rotate(heading));
-    }
-    
     /**
      * This sprite only reacts to collisions with the
      * borders of the display region. When it does, it
