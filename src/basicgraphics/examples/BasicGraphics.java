@@ -29,14 +29,6 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
-class Foo implements ActionListener {
-
-    @Override
-    public void actionPerformed(ActionEvent ae) {
-        System.out.println("Click!");
-    }
-}
-
 /**
  *
  * @author sbrandt

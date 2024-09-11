@@ -30,7 +30,7 @@ public class BasicLayout implements LayoutManager {
     public void addLayoutComponent(String name, Component comp) {
         Matcher matcher = pattern.matcher(name);
         boolean worked = matcher.matches();
-        assert worked;
+        assert worked : "String does not match pattern: '"+name+"'";
         int x = Integer.parseInt(matcher.group(1));
         int y = Integer.parseInt(matcher.group(2));
         int w = Integer.parseInt(matcher.group(3));
@@ -40,6 +40,11 @@ public class BasicLayout implements LayoutManager {
         assert w > 0;
         assert h > 0;
         GridDim gd = new GridDim(x,y,w,h);
+        for(var gd2 : map.keySet()) {
+            if(gd.overlaps(gd2)) {
+                throw new GuiException("Overlapping boxes: "+gd+" and "+gd2);
+            }
+        }
         map.put(gd, comp);
     }
     
@@ -51,6 +56,18 @@ public class BasicLayout implements LayoutManager {
             return this.x==that.x && this.y==that.y && this.w==that.w && this.h==that.h;
         }
         GridDim(int x,int y,int w,int h) { this.x=x; this.y=y; this.w=w; this.h=h; }
+        public boolean overlaps(GridDim gd) {
+            int p1 = Math.min(x, gd.x);
+            int p2 = Math.max(x+w, gd.x+gd.w);
+            if(p2 - p1 >= w + gd.w) return false;
+            int k1 = Math.min(y, gd.y);
+            int k2 = Math.max(y+h, gd.y+gd.h);
+            if(k2 - k1 >= h + gd.h) return false;
+            return true;
+        }
+        public String toString() {
+            return "x="+x+",y="+y+",w="+w+",h="+h;
+        }
     }
     GridDim getGridDim() {
         int w=0, h=0;

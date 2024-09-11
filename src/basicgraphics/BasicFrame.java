@@ -176,6 +176,10 @@ public class BasicFrame {
      * @param jc - The component that should be placed at location loc.
      */
     public void add(String loc, JComponent jc) {
+        if(baseLayout == null) {
+            jf.add(loc, jc);
+            return;
+        }
         int minI = Integer.MAX_VALUE, maxI = Integer.MIN_VALUE;
         int minJ = Integer.MAX_VALUE, maxJ = Integer.MIN_VALUE;
         boolean found = false;
@@ -239,6 +243,11 @@ public class BasicFrame {
         Component c = components.get(str);
         if(c == null) throw new Error("No such component '"+str+"'");
         return c;
+    }
+
+    BasicLayout blayout;
+    public void setLayout(BasicLayout blayout) {
+        jf.setLayout(blayout);
     }
 
     static class MenuHolder {
