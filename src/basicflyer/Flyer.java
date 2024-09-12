@@ -7,6 +7,7 @@ package basicflyer;
 
 import basicgraphics.images.BackgroundPainter;
 import basicgraphics.BasicFrame;
+import basicgraphics.BasicLayout;
 import basicgraphics.Card;
 import basicgraphics.ClockWorker;
 import basicgraphics.SpriteComponent;
@@ -104,8 +105,9 @@ public class Flyer {
         String[][] layout = {{
             "Flyer"
         }};
-        bc2.setStringLayout(layout);
-        bc2.add("Flyer",sc);
+//        bc2.setStringLayout(layout);
+        bc2.setLayout(new BasicLayout());
+        bc2.add("x=0,y=0,w=1,h=1",sc);
         bf.show();
         final Falcon f = new Falcon(sc);
         sc.setFocus(f);
@@ -142,11 +144,11 @@ public class Flyer {
                             }
                             if(iteration() == maxIteration()) {
                                 pl.setActive(false);
-                                boom.play();
+                                boom.playOverlapping();
                             }
                         }
                     });
-                    clip.play();
+                    clip.playOverlapping();
                 }
             }
         });

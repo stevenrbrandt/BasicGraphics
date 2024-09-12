@@ -11,6 +11,7 @@ import java.awt.Container;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.LayoutManager;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +44,10 @@ public class BasicContainer extends Container {
      * @param jc - The component that should be placed at location loc.
      */
     public void add(String loc, JComponent jc) {
+        if(layout == null) {
+            super.add(loc, jc);
+            return;
+        }
         int minI = Integer.MAX_VALUE, maxI = Integer.MIN_VALUE;
         int minJ = Integer.MAX_VALUE, maxJ = Integer.MIN_VALUE;
         boolean found = false;

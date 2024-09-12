@@ -11,8 +11,6 @@ import java.net.URISyntaxException;
 import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 
@@ -35,11 +33,7 @@ public final class ReusableClip {
     static LinkedList<ReusableClip> queue = new LinkedList<>();
     public static boolean verbose = false;
 
-    static ExecutorService overlappingSoundPool = Executors.newCachedThreadPool(r -> {
-        Thread t = Executors.defaultThreadFactory().newThread(r);
-        t.setDaemon(true);
-        return t;
-    });
+    static ExecutorService overlappingSoundPool = Executors.newFixedThreadPool(3);
 
     static {
         thread = new Thread(() -> {
