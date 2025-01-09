@@ -9,6 +9,7 @@ import basicgraphics.BasicFrame;
 import basicgraphics.BasicLayout;
 import basicgraphics.ClockWorker;
 import basicgraphics.CollisionEventType;
+import basicgraphics.Scene;
 import basicgraphics.Sprite;
 import basicgraphics.SpriteCollisionEvent;
 import basicgraphics.SpriteComponent;
@@ -47,8 +48,7 @@ public class BasicGraphics2 {
         Graphics imgr = im1.getGraphics();
         imgr.setColor(color);
         imgr.fillOval(0, 0, ballSize, ballSize);
-        Picture p = new Picture(im1);
-        p.transparentWhite();
+        Picture p = new Picture(im1).transparentWhite();
         return p;
     }
     final static Picture orangeBall = createBall(Color.orange);
@@ -59,7 +59,7 @@ public class BasicGraphics2 {
     static class Ball extends Sprite {
         boolean dead = false;
 
-        Ball(SpriteComponent sc) {
+        Ball(Scene sc) {
             super(sc);
         }
 
@@ -121,7 +121,7 @@ public class BasicGraphics2 {
         f.add("x=0,y=5,w=2,h=1", new Picture("sarah.png").makeButton());
         f.add("x=2,y=5,w=1,h=1", new JLabel("corner", JLabel.CENTER));
 
-        Bat bat = new Bat(sc);
+        Bat bat = new Bat(sc.getScene());
 
         Dimension d = new Dimension(800, 400);
         sc.setPreferredSize(d);
@@ -166,7 +166,7 @@ public class BasicGraphics2 {
         };
         sc.addMouseListener(ml);
         for (int i = 0; i < nballs; i++) {
-            Ball sball = new Ball(sc);
+            Ball sball = new Ball(sc.getScene());
             if (i % 2 == 0) {
                 sball.setPicture(redBall);
             } else {

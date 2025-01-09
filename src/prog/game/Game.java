@@ -197,7 +197,7 @@ public class Game {
             g.drawOval(0, 0, BOX, BOX);
             g.drawString(""+i,2*BOX/10,9*BOX/10);
             Picture p = new Picture(im);
-            Sprite sp = new Sprite(sprc);
+            Sprite sp = new Sprite(sprc.getScene());
             sp.setDrawingPriority(1);
             sp.setPicture(p);
             tokens.add(sp);
@@ -260,7 +260,7 @@ public class Game {
             sp.setY(BOX*i);
         }
 
-        Sprite sprite = new Sprite(sprc) {
+        Sprite sprite = new Sprite(sprc.getScene()) {
             int rebox(int n) {
                 return (n / BOX) * BOX + BOX / 2;
             }
@@ -297,7 +297,7 @@ public class Game {
         Picture pawnPic = new Picture("pawn2.png");
         pawnPic = pawnPic.resize((1.0*BOX) / Math.max(pawnPic.getWidth(),pawnPic.getHeight()));
         //pawnPic.transparentWhite();
-        Sprite tester = new Sprite(sprc);
+        Sprite tester = new Sprite(sprc.getScene());
         tester.setY(4*BOX);
         tester.setPicture(pawnPic);
         sprite.setPicture(pawnPic);

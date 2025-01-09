@@ -42,10 +42,10 @@ public class Robo {
         bf.add("one", sc);
         sc.setPreferredSize(new Dimension(NX*BLOCK_SIZE+2*PADDING,NY*BLOCK_SIZE+2*PADDING));
         for(int i=0;i<NX;i++) {
-            MartianEgg me = new MartianEgg(sc, RAND.nextInt(100));
+            MartianEgg me = new MartianEgg(sc.getScene(), RAND.nextInt(100));
             board.set(me,i,2);
         }
-        Mover mv = new Mover(sc,board);
+        Mover mv = new Mover(sc.getScene(),board);
         bf.show();
         ClockWorker.initialize(20);
         board.m = mv;

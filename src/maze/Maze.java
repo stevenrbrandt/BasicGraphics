@@ -145,7 +145,7 @@ public class Maze {
         toSearch.add(start);
         // Mark the start position on the board (as already searched)
         board[start.x][start.y].sequence=1;
-        Sprite sp = new Sprite(mv.jp) {
+        Sprite sp = new Sprite(mv.jp.getScene()) {
             int step = 0;
             // Constructor for anonymous
             // inner class

@@ -8,10 +8,12 @@ package walkthedog;
 import basicgraphics.BasicFrame;
 import basicgraphics.ClockWorker;
 import basicgraphics.CollisionEventType;
+import basicgraphics.Scene;
 import basicgraphics.Sprite;
 import basicgraphics.SpriteCollisionEvent;
 import basicgraphics.SpriteComponent;
 import basicgraphics.Task;
+import basicgraphics.images.BackgroundPainter;
 import basicgraphics.images.Picture;
 import java.awt.Dimension;
 
@@ -21,9 +23,9 @@ import java.awt.Dimension;
  */
 class Dog extends Sprite {
     Picture basePic;
-    Dog(SpriteComponent sc) {
+    Dog(Scene sc) {
         super(sc);
-        basePic = new Picture("dog.jpg");
+        basePic = new Picture("dog.jpg").transparentWhite().shrinkToMinimum();
         setPicture(basePic);
         final double del = .1;
         ClockWorker.addTask(new Task() {
@@ -51,9 +53,11 @@ class Dog extends Sprite {
 public class WalkDog {
     public static void main(String[] args) {
         SpriteComponent sc = new SpriteComponent();
-        Dog dog = new Dog(sc);
+        Scene scene = sc.getScene();
+        scene.setPainter(new BackgroundPainter(new Picture("park.jpg")));
+        Dog dog = new Dog(sc.getScene());
         dog.setVel(-1.0, 0);
-        dog.setY(100);
+        dog.setY(350);
         dog.setX(800);
         dog.setHeadingOffset(Math.PI);
         

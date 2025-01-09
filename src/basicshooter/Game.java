@@ -53,14 +53,14 @@ public class Game {
         String[][] layout = {{"center"}};
         bf.setStringLayout(layout);
         bf.add("center",sc);
-        final Shooter shooter = new Shooter(sc);
+        final Shooter shooter = new Shooter(sc.getScene());
         for(int i=0;i<ENEMIES;i++) {
-            Enemy en = new Enemy(sc);
+            Enemy en = new Enemy(sc.getScene());
         }
         KeyAdapter key = new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent ke) {
-                new Bullet(sc,shooter,ke.getKeyCode());
+                new Bullet(sc.getScene(),shooter,ke.getKeyCode());
             }
         };
         bf.addKeyListener(key);
@@ -91,7 +91,7 @@ public class Game {
         MouseAdapter ma = new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent me) {
-                new Bullet(sc,shooter,me.getX(),me.getY());
+                new Bullet(sc.getScene(),shooter,me.getX(),me.getY());
             }
         };
         sc.addMouseListener(ma);

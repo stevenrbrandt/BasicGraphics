@@ -1,6 +1,7 @@
 package lightsout;
 
 import basicgraphics.BasicFrame;
+import basicgraphics.Scene;
 import basicgraphics.Sprite;
 import basicgraphics.SpriteComponent;
 import basicgraphics.images.Picture;
@@ -19,7 +20,7 @@ public class Tile extends Sprite {
     public final int x, y;
     private final LightsOutGame gameInstance;
 
-    public Tile(SpriteComponent sc, LightsOutGame gameInstance, int x, int y, boolean startLit) {
+    public Tile(Scene sc, LightsOutGame gameInstance, int x, int y, boolean startLit) {
         super(sc);
         this.lit = startLit;
         this.gameInstance = gameInstance;

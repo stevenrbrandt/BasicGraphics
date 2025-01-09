@@ -77,7 +77,7 @@ public class Flyer {
             
         };
         final SpriteComponent sc = new SpriteComponent();
-        sc.setPainter(painter);
+        sc.getScene().setPainter(painter);
         String[][] splashLayout = {
             {"Title"},
             {"Button"},
@@ -109,8 +109,8 @@ public class Flyer {
         bc2.setLayout(new BasicLayout());
         bc2.add("x=0,y=0,w=1,h=1",sc);
         bf.show();
-        final Falcon f = new Falcon(sc);
-        sc.setFocus(f);
+        final Falcon f = new Falcon(sc.getScene());
+        sc.getScene().setFocus(f);
         
         // Set the screen behavior
         //sc.setBackgroundSize(new Dimension(10000,8000));
@@ -127,7 +127,7 @@ public class Flyer {
                 } else if(ke.getKeyCode() == KeyEvent.VK_LEFT) {
                     f.rotate(-INCR);
                 } else if(ke.getKeyChar() == ' ') {
-                    final Plasma pl = new Plasma(sc);
+                    final Plasma pl = new Plasma(sc.getScene());
                     pl.setVel(f.getVelX()*2, f.getVelY()*2);
                     pl.setCenterX(f.centerX());
                     pl.setCenterY(f.centerY());

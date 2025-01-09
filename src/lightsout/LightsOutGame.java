@@ -32,7 +32,7 @@ public class LightsOutGame {
         for (int i = 0; i < N_TILES; i++) {
             tiles[i] = new Tile[N_TILES];
             for (int j = 0; j < N_TILES; j++) {
-                tiles[i][j] = new Tile(sc, this, j, i, false);
+                tiles[i][j] = new Tile(sc.getScene(), this, j, i, false);
             }
         }
 

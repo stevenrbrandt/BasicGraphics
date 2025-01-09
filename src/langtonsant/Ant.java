@@ -48,7 +48,7 @@ public class Ant {
               }
           }
         };
-        new AntSprite(sc,grid);
+        new AntSprite(sc.getScene(),grid);
         bf.setStringLayout(layout);
         bf.add("C", sc);
         sc.setPreferredSize(new Dimension(PIXELS_X,PIXELS_Y));

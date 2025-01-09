@@ -5,6 +5,7 @@
  */
 package basicshooter;
 
+import basicgraphics.Scene;
 import basicgraphics.Sprite;
 import basicgraphics.SpriteComponent;
 import java.awt.event.KeyEvent;
@@ -14,7 +15,7 @@ import java.awt.event.KeyEvent;
  * @author sbrandt
  */
 class Bullet extends Sprite {
-    Bullet(SpriteComponent sc,Sprite sp,int direction) {
+    Bullet(Scene sc,Sprite sp,int direction) {
         super(sc);
         setPicture(Game.makeBall(Game.BULLET_COLOR, Game.SMALL));
         setCenterX(sp.centerX());
@@ -29,7 +30,7 @@ class Bullet extends Sprite {
             setVel(-2.0, 0);
     }
 
-    Bullet(SpriteComponent sc, Shooter sp, int x, int y) {
+    Bullet(Scene sc, Shooter sp, int x, int y) {
         super(sc);
         setPicture(Game.makeBall(Game.BULLET_COLOR, Game.SMALL));
         setX(sp.getX()+(Game.BIG-Game.SMALL)/2);

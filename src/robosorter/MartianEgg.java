@@ -6,8 +6,8 @@
 package robosorter;
 
 import basicgraphics.BasicFrame;
+import basicgraphics.Scene;
 import basicgraphics.Sprite;
-import basicgraphics.SpriteComponent;
 import basicgraphics.images.Picture;
 import java.awt.Color;
 import java.awt.Font;
@@ -20,7 +20,7 @@ import java.awt.image.BufferedImage;
  */
 public class MartianEgg extends Sprite {
     final int num;
-    public MartianEgg(SpriteComponent sc,int num) {
+    public MartianEgg(Scene sc,int num) {
         super(sc);
         this.num = num;
         BufferedImage image = BasicFrame.createImage(Robo.BLOCK_SIZE, Robo.BLOCK_SIZE);

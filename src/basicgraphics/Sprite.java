@@ -21,20 +21,20 @@ import java.util.LinkedList;
  */
 public class Sprite implements MouseListener, Comparable<Sprite> {
     
-    private SpriteComponent component;
+    private Scene scene;
     private boolean added = false;
     private double headingOffset=0, heading=0;
     public boolean freezeOrientation = false;
     
     private Sprite() {}
-    public Sprite(SpriteComponent sc) {
-        component = sc;
+    public Sprite(Scene sc) {
+        scene = sc;
         assert sc != null;
         //sc.addSprite(this);
     }
     
     public SpriteComponent getSpriteComponent() {
-        return component;
+        return scene.spritecomponent;
     }
     
     public boolean is_visible = true;
@@ -128,7 +128,7 @@ public class Sprite implements MouseListener, Comparable<Sprite> {
         setX(getX() - delx/2);
         setY(getY() - dely/2);
         if(!added) {
-            component.addSprite(this);
+            scene.addSprite(this);
             added = true;
         }
     }
@@ -183,18 +183,18 @@ public class Sprite implements MouseListener, Comparable<Sprite> {
         y += vely;
         boolean invis = false;
         boolean xlo=false, xhi=false, ylo=false, yhi=false;
-        if(this.component.periodic_x || this.component.periodic_y) {
-            Picture bg = this.component.background;
+        if(this.scene.periodic_x || this.scene.periodic_y) {
+            Picture bg = this.scene.background;
             if (bg != null) {
                 Dimension full = bg.getSize();
-                if (this.component.periodic_x) {
+                if (this.scene.periodic_x) {
                     if (x > full.width) {
                         x -= full.width;
                     } else if (x < 0) {
                         x += full.width;
                     }
                 }
-                if (this.component.periodic_y) {
+                if (this.scene.periodic_y) {
                     if (y > full.height) {
                         y -= full.height;
                     } else if (y < 0) {
@@ -204,7 +204,7 @@ public class Sprite implements MouseListener, Comparable<Sprite> {
             }
         }
         
-        if (!this.component.periodic_x) {
+        if (!this.scene.periodic_x) {
             if (x < -getWidth()) {
                 xlo = true;
                 invis = true;
@@ -220,7 +220,7 @@ public class Sprite implements MouseListener, Comparable<Sprite> {
             }
         }
 
-        if (!this.component.periodic_y) {
+        if (!this.scene.periodic_y) {
             if (y < -getHeight()) {
                 ylo = true;
                 invis = true;

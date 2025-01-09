@@ -5,6 +5,7 @@
  */
 package basicshooter;
 
+import basicgraphics.Scene;
 import basicgraphics.Sprite;
 import basicgraphics.SpriteComponent;
 
@@ -13,7 +14,7 @@ import basicgraphics.SpriteComponent;
  * @author sbrandt
  */
 public class Shooter extends Sprite {
-    public Shooter(SpriteComponent sc) {
+    public Shooter(Scene sc) {
         super(sc);
         setPicture(Game.makeBall(Game.SHOOTER_COLOR, Game.BIG));
         setX(Game.BOARD_SIZE.width/2);

@@ -6,9 +6,9 @@
 package basicgraphics.examples;
 
 import basicgraphics.CollisionEventType;
+import basicgraphics.Scene;
 import basicgraphics.Sprite;
 import basicgraphics.SpriteCollisionEvent;
-import basicgraphics.SpriteComponent;
 import basicgraphics.images.Picture;
 
 /**
@@ -17,7 +17,7 @@ import basicgraphics.images.Picture;
  */
 public class Bat extends Sprite {
 
-    public Bat(SpriteComponent sc) {
+    public Bat(Scene sc) {
         super(sc);
         setPicture(new Picture("bat.png"));
         setVel(1, 1);

@@ -6,8 +6,8 @@
 package robosorter;
 
 import basicgraphics.ClockWorker;
+import basicgraphics.Scene;
 import basicgraphics.Sprite;
-import basicgraphics.SpriteComponent;
 import basicgraphics.Task;
 import basicgraphics.images.Picture;
 import java.util.LinkedList;
@@ -23,11 +23,10 @@ public class Mover extends Sprite {
     int count, x, y;
     LinkedList<Runnable> actions = new LinkedList<>();
 
-    public Mover(SpriteComponent sc, Board board) {
+    public Mover(Scene sc, Board board) {
         super(sc);
-        Picture p = new Picture("claw.png");
+        Picture p = new Picture("claw.png").transparentWhite();
         this.board = board;
-        p.transparentWhite();
         setPicture(p);
         ClockWorker.addTask(new Task() {
             @Override

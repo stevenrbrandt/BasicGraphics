@@ -6,6 +6,7 @@
 package basicflyer;
 
 import basicgraphics.BasicFrame;
+import basicgraphics.Scene;
 import basicgraphics.Sprite;
 import basicgraphics.SpriteCollisionEvent;
 import basicgraphics.SpriteComponent;
@@ -40,7 +41,7 @@ public class Plasma extends Sprite {
      *
      * @param sc
      */
-    public Plasma(SpriteComponent sc) {
+    public Plasma(Scene sc) {
         super(sc);
         setPicture(makeBall(Color.red, Flyer.PLASMA_SIZE));
     }

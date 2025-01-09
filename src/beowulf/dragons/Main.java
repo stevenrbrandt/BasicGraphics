@@ -8,6 +8,7 @@ package beowulf.dragons;
 import basicgraphics.BasicContainer;
 import basicgraphics.BasicFrame;
 import basicgraphics.ClockWorker;
+import basicgraphics.Scene;
 import basicgraphics.Sprite;
 import basicgraphics.SpriteComponent;
 import basicgraphics.Task;
@@ -54,8 +55,7 @@ public class Main {
         double scalex = size/(1.0*picture.getWidth());
         double scaley = size/(1.0*picture.getHeight());
         double scale = scalex < scaley ? scalex : scaley;
-        Picture p = picture.resize(scale);
-        p.transparentBorder();
+        Picture p = picture.resize(scale).transparentBorder();
         return p;
     }
     
@@ -67,7 +67,7 @@ public class Main {
         public void arrived() {
             runNext();
         }
-        DragonSprite(SpriteComponent sc) {
+        DragonSprite(Scene sc) {
             super(sc);
         }
     }
@@ -99,7 +99,7 @@ public class Main {
                 sp.rotate(angle);
             } else if(c.cmd.equals("fire")) {
                 DragonSprite sp = sprites.get(c.id-1);
-                flameSprite = new Sprite(sc) {
+                flameSprite = new Sprite(sc.getScene()) {
                     @Override
                     public void arrived() {
                         runNext();
@@ -120,7 +120,7 @@ public class Main {
             } else if(c.cmd.equals("dead")) {
                 DragonSprite sp = sprites.get(c.id-1);
                 sp.setActive(false);
-                Sprite ex = new Sprite(sc) {
+                Sprite ex = new Sprite(sc.getScene()) {
                     int count = 0;
                     
                     {
@@ -141,9 +141,7 @@ public class Main {
                         });
                     }
                 };
-                ex.setPicture(sp.explosion);
-                ex.getPicture().transparentBorder();
-                ex.getPicture().shrinkToMinimum();
+                ex.setPicture(sp.explosion.transparentBorder().shrinkToMinimum());
                 ex.setX(sp.getX());
                 ex.setY(sp.getY());
                 break;
@@ -282,7 +280,7 @@ public class Main {
         ImageCommand ic = null;
         for(Command c : commands) {
             if(c.cmd.equals("hello")) {
-                DragonSprite sp = new DragonSprite(sc);
+                DragonSprite sp = new DragonSprite(sc.getScene());
                 assert ic.id == c.id;
                 
                 File fm = new File(imageDir,ic.image);

@@ -27,7 +27,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import javax.swing.JComponent;
 import javax.swing.SwingUtilities;
 
@@ -36,50 +35,36 @@ import javax.swing.SwingUtilities;
  * @author sbrandt
  */
 public class SpriteComponent extends JComponent implements MouseListener {
-
-    private final Set<Sprite> sprites = new TreeSet<>();
+    Scene scene;
+    Set<Sprite> sprites() { return scene.sprites; }
     
-    int offsetX=0, offsetY=0;
-    double subOffsetX=0, subOffsetY=0;
-    Dimension backgroundSize;
-    Picture background = null;
-    Sprite focus = null;
-    public void setBackgroundSize(Dimension d) {
-        backgroundSize = d;
-        if(background == null) {
-            BufferedImage bimage = BasicFrame.createImage(d.width, d.height);
-            paintBackground(bimage.getGraphics());
-            background = new Picture(bimage);
-            System.out.println("Image size: "+d);
-        }
-    }
-    public void setFocus(Sprite s) {
-        focus = s;
+    public Scene swapScene(Scene scene) {
+        Scene oldScene = this.scene;
+        this.scene = scene;
+        assert scene.spritecomponent == oldScene.spritecomponent;
+        return oldScene;
     }
 
     public SpriteComponent() {
+        scene = new Scene(this);
         int m = 50;
         setPreferredSize(new Dimension(BasicFrame.FRAME_SIZE.width-m, BasicFrame.FRAME_SIZE.height-m));
         setMinimumSize(new Dimension(300,300));
         addMouseListener(this);
     }
 
-    void addSprite(Sprite sp) {
-        Util.invokeAndWait(()->{ sprites.add(sp);});
-    }
-
     public void paintBackground(Graphics g) {
         Dimension d = getFullSize();
-        if (painter == null) {
+        if (scene.painter == null) {
             g.setColor(Color.white);
             g.fillRect(0, 0, d.width, d.height);
         } else {
-            painter.paint(g, d);
+            scene.painter.paint(g, d);
         }
     }
     
     public Dimension getFullSize() {
-        return backgroundSize == null ? super.getSize() : backgroundSize;
+        return scene.backgroundSize == null ? super.getSize() : scene.backgroundSize;
     }
     
     double setMinMax(double value, double minv, double maxv) {
@@ -87,27 +72,24 @@ public class SpriteComponent extends JComponent implements MouseListener {
         if(value > maxv) value = maxv;
         return value;
     }
-    
-    public boolean periodic_x = false;
-    public boolean periodic_y = false;
 
     final void paintRegion(Graphics g, PaintRegion pr) {
         Dimension d = getSize();
-        if (background != null) {
+        if (scene.background != null) {
             Dimension full = getFullSize();
             int fwidth = full.width - d.width;
             int fheight = full.height - d.height;
             int fw = full.width;
             int fh = full.height;
-            int sx1 = (int) (focus.getCenterX() - d.width / 2);
-            int sy1 = (int) (focus.getCenterY() - d.height / 2);
+            int sx1 = scene.focus == null ? 0 : (int) (scene.focus.getCenterX() - d.width / 2);
+            int sy1 = scene.focus == null ? 0 : (int) (scene.focus.getCenterY() - d.height / 2);
             int ux1 = sx1 + d.width;
             int uy1 = sy1 + d.height;
             // Region:
             // outside 
-            if(periodic_x || periodic_y) {
+            if(scene.periodic_x || scene.periodic_y) {
                 int px = 0, py = 0;
-                if(periodic_x == false) {
+                if(scene.periodic_x == false) {
                     px = 0;
                     if(sx1 < 0) sx1 = 0;
                     else if(sx1 > fwidth) sx1 = fwidth;
@@ -115,7 +97,7 @@ public class SpriteComponent extends JComponent implements MouseListener {
                 }
                 else if(sx1 < 0) px = -1;
                 else if(ux1 >= fw) px = 1;
-                if(periodic_y == false) {
+                if(scene.periodic_y == false) {
                     py = 0;
                     if(sy1 < 0) sy1 = 0;
                     else if(sy1 > fheight) sy1 = fheight;
@@ -201,10 +183,10 @@ public class SpriteComponent extends JComponent implements MouseListener {
         }
     }
     
-    public void setOffsetX(int x) { offsetX = x; }
-    public int getOffsetX() { return offsetX; }
-    public void setOffsetY(int y) { offsetY = y; }
-    public int getOffsetY() { return offsetY; }
+    public void setOffsetX(int x) { scene.offsetX = x; }
+    public int getOffsetX() { return scene.offsetX; }
+    public void setOffsetY(int y) { scene.offsetY = y; }
+    public int getOffsetY() { return scene.offsetY; }
     
     Color drawBox = null;
     /**
@@ -221,13 +203,13 @@ public class SpriteComponent extends JComponent implements MouseListener {
     }
     
     public boolean scroll(int x,int y,int s) {
-        if(y + offsetY < 0) {
-            offsetY += s;
+        if(y + scene.offsetY < 0) {
+            scene.offsetY += s;
             return true;
         } else {
             Dimension d = getSize();
-            if (y + offsetY > d.height) {
-                offsetY -= s;
+            if (y + scene.offsetY > d.height) {
+                scene.offsetY -= s;
                 return true;
             }
         }
@@ -240,7 +222,7 @@ public class SpriteComponent extends JComponent implements MouseListener {
     @Override
     public final void paintComponent(Graphics g) {
         Dimension d = getSize();
-        Dimension b = backgroundSize;
+        Dimension b = scene.backgroundSize;
         if(b == null) b = d;
         // image = null;
         if (image == null || sz.width != b.width || sz.height != b.height) {
@@ -248,22 +230,22 @@ public class SpriteComponent extends JComponent implements MouseListener {
             sz = b;
         }
         Graphics gi = image.getGraphics();
-        if (focus != null) {
+        if (scene.focus != null) {
             AffineTransform at = new AffineTransform();
-            if (focus != null && backgroundSize != null) {
+            if (scene.focus != null && scene.backgroundSize != null) {
                 at = new AffineTransform(at);
                 
-                subOffsetX = d.width/2-focus.getCenterX();
-                if(!periodic_x) {
-                    subOffsetX = setMinMax(subOffsetX,  -b.width+d.width,0);
+//                subOffsetX = d.width/2-focus.getCenterX();
+                if(!scene.periodic_x) {
+//                    subOffsetX = setMinMax(subOffsetX,  -b.width+d.width,0);
                 }
                 
-                subOffsetY = d.height/2-focus.getCenterY();
-                if(!periodic_y) {
-                    subOffsetY = setMinMax(subOffsetY, -b.height+d.height, 0);
+//                subOffsetY = d.height/2-focus.getCenterY();
+                if(!scene.periodic_y) {
+//                    subOffsetY = setMinMax(scenesubOffsetY, -b.height+d.height, 0);
                 }
                 
-                at.translate(subOffsetX, subOffsetY);
+//                at.translate(subOffsetX, subOffsetY);
                 Graphics2D g2 = (Graphics2D) gi;
                 g2.setTransform(at);
             }
@@ -273,8 +255,8 @@ public class SpriteComponent extends JComponent implements MouseListener {
             public void paintRegion(Graphics g, int sx1, int sy1, int sx2, int sy2,
                     int dx1, int dy1, int dx2, int dy2) {
                 Dimension d = getSize();
-                if (background != null) {
-                    g.drawImage(background.getImage(), sx1, sy1, sx2, sy2,
+                if (scene.background != null) {
+                    g.drawImage(scene.background.getImage(), sx1, sy1, sx2, sy2,
                             dx1, dy1, dx2, dy2, null);
                 } else {
                     //g.setColor(Color.white);
@@ -289,7 +271,7 @@ public class SpriteComponent extends JComponent implements MouseListener {
             public void paintRegion(Graphics g_, int sx1, int sy1, int sx2, int sy2, 
                     int dx1, int dy1, int dx2, int dy2) {
                 Graphics2D g = (Graphics2D) g_;
-                for (Sprite sprite : new ArrayList<>(sprites)) {
+                for (Sprite sprite : new ArrayList<>(sprites())) {
                     if (!sprite.is_visible) {
                         continue;
                     }
@@ -426,14 +408,14 @@ public class SpriteComponent extends JComponent implements MouseListener {
         if (d.width == 0 || d.height == 0) {
             return;
         }
-        for (Iterator<Sprite> iter = sprites.iterator(); iter.hasNext();) {
+        for (Iterator<Sprite> iter = sprites().iterator(); iter.hasNext();) {
             Sprite sp = iter.next();
             if (!sp.isActive()) {
                 iter.remove();
             }
         }
-        List<Sprite> spriteLoop = new ArrayList<>(sprites.size());
-        spriteLoop.addAll(sprites);
+        List<Sprite> spriteLoop = new ArrayList<>(sprites().size());
+        spriteLoop.addAll(sprites());
         for (Sprite sp : spriteLoop) {
             sp.move(d);
         }
@@ -513,7 +495,7 @@ public class SpriteComponent extends JComponent implements MouseListener {
     List<Sprite> intersects(MouseEvent e) {
         List<Sprite> list = new ArrayList<>();
         double x = e.getX(), y = e.getY();
-        for(Sprite sp : sprites) {
+        for(Sprite sp : sprites()) {
             double xlo = sp.getX();
             double xhi = xlo + sp.getWidth();
             if(xlo <= x && x <= xhi) {
@@ -651,12 +633,8 @@ public class SpriteComponent extends JComponent implements MouseListener {
         }
         return false;
     }
-    
-    private Painter painter = null;
-    public void setPainter(Painter p) {
-        painter = p;
-    }
-    public Painter getPainter() {
-        return painter;
+
+    public Scene getScene() {
+        return scene;
     }
 }

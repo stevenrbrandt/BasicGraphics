@@ -6,6 +6,7 @@
 package basicshooter;
 
 import basicgraphics.CollisionEventType;
+import basicgraphics.Scene;
 import basicgraphics.Sprite;
 import basicgraphics.SpriteCollisionEvent;
 import basicgraphics.SpriteComponent;
@@ -29,7 +30,7 @@ public class Enemy extends Sprite {
         super.setActive(b);
     }
 
-    public Enemy(SpriteComponent sc) {
+    public Enemy(Scene sc) {
         super(sc);
         enemyCount++;
         setPicture(Game.makeBall(Game.ENEMY_COLOR, Game.BIG));

@@ -6,6 +6,7 @@
 package langtonsant;
 
 import basicgraphics.ClockWorker;
+import basicgraphics.Scene;
 import basicgraphics.Sprite;
 import basicgraphics.SpriteComponent;
 import basicgraphics.Task;
@@ -19,7 +20,7 @@ import java.awt.Dimension;
 class AntSprite extends Sprite {
     Picture pic;
     
-    public AntSprite(SpriteComponent sc,boolean[][] grid) {
+    public AntSprite(Scene sc,boolean[][] grid) {
         super(sc);
         pic = new Picture("ant-small.png");
         setPicture(pic);

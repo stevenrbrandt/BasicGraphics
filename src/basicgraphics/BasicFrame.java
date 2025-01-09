@@ -459,7 +459,7 @@ public class BasicFrame {
      * @return
      */
     public static BufferedImage createImage(int w, int h) {
-        return new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        return new BufferedImage(w, h, BufferedImage.TYPE_4BYTE_ABGR);
     }
 
     public Container getContentPane() {

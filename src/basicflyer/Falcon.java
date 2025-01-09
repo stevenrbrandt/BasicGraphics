@@ -5,6 +5,7 @@
  */
 package basicflyer;
 
+import basicgraphics.Scene;
 import basicgraphics.Sprite;
 import basicgraphics.SpriteCollisionEvent;
 import basicgraphics.SpriteComponent;
@@ -25,7 +26,7 @@ public class Falcon extends Sprite {
      * 
      * @param sc
      */
-    public Falcon(SpriteComponent sc) {
+    public Falcon(Scene sc) {
         super(sc);
         initialPic = new Picture("mfalcon.png");
         setPicture(initialPic);

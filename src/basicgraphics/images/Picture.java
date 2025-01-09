@@ -17,6 +17,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.nio.Buffer;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -43,24 +44,34 @@ public class Picture extends JComponent {
         return new Dimension(width, height);
     }
 
+    BufferedImage addAlpha(BufferedImage bi) {
+        BufferedImage newbi = BasicFrame.createImage(bi.getWidth(), bi.getHeight());
+        Graphics2D g = newbi.createGraphics();
+        g.drawImage(bi, 0, 0, null);
+        return newbi;
+    }
+
     /**
      * Set all white pixels to transparent
      */
-    public void transparentWhite() {
+    public Picture transparentWhite() {
+        BufferedImage newImage = addAlpha(image);
         for (int j = 0; j < height; j++) {
             for (int i = 0; i < width; i++) {
                 int color = image.getRGB(i, j);
                 if ((color & 0x00FFFFFF) == 0x00FFFFFF) {
-                    image.setRGB(i, j, 0x00000000);
+                    newImage.setRGB(i, j, 0x00FFFFFF);
                 }
             }
         }
+        return new Picture(newImage);
     }
 
     /**
      * Set all colors found on the border of the image to transparent
      */
-    public void transparentBorder() {
+    public Picture transparentBorder() {
+        BufferedImage newImage = addAlpha(image);
         Set<Integer> set = new HashSet<>();
         for (int j = 0; j < height; j++) {
             int value = image.getRGB(0, j) & 0x00FFFFFF;
@@ -74,14 +85,17 @@ public class Picture extends JComponent {
             value = image.getRGB(i, height - 1) & 0x00FFFFFF;
             set.add(value);
         }
+        int count = 0;
         for (int j = 0; j < height; j++) {
             for (int i = 0; i < width; i++) {
                 int color = image.getRGB(i, j) & 0x00FFFFFF;
                 if (set.contains(color)) {
-                    image.setRGB(i, j, 0x00000000);
+                    newImage.setRGB(i, j, color);
+                    count++;
                 }
             }
         }
+        return new Picture(newImage);
     }
 
     public void makeSquare() {
@@ -114,15 +128,12 @@ public class Picture extends JComponent {
         height = w;
     }
 
-    public void shrinkToMinimum() {
-        if (true) {
-            return;
-        }
+    public Picture shrinkToMinimum() {
         int lox = width, hix = 0;
         int loy = height, hiy = 0;
         for (int j = 0; j < height; j++) {
             for (int i = 0; i < width; i++) {
-                int color = image.getRGB(i, j) & 0x00FFFFFF;
+                int color = image.getRGB(i, j) & 0xFF000000;
                 if (color != 0) {
                     if (i < lox) {
                         lox = i;
@@ -139,22 +150,8 @@ public class Picture extends JComponent {
                 }
             }
         }
-        for (int i = 0; i < 3; i++) {
-            if (lox > 0) {
-                lox--;
-            }
-            if (loy > 0) {
-                loy--;
-            }
-            if (hix + 1 < width) {
-                hix++;
-            }
-            if (hiy + 1 < height) {
-                hiy++;
-            }
-        }
         if (lox == 0 && loy == 0 && hix == width - 1 && hiy == height - 1) {
-            return;
+            return this;
         }
         BufferedImage im = BasicFrame.createImage(1 + hix - lox, 1 + hiy - loy);
         for (int j = loy; j <= hiy; j++) {
@@ -166,6 +163,7 @@ public class Picture extends JComponent {
         image = im;
         width = (hix - lox + 1);
         height = (hiy - loy + 1);
+        return new Picture(im);
     }
 
     /**
