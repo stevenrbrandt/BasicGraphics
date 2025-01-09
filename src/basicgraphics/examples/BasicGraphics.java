@@ -194,7 +194,7 @@ public class BasicGraphics {
                 ClockWorker.addTask(new Task(DIE_AFTER) {
                     public void run() {
                         if (iteration() == DIE_AFTER) {
-                            if(sp1.dead) sp1.setActive(false);
+                            if(sp1.dead) sp1.destroy();
                         }
                     }
                 });

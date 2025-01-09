@@ -114,12 +114,12 @@ public class Main {
                 flameSprite.moveTo(c.x*CELL+CELL/2, c.y*CELL+CELL/2, 6.0);
                 break;
             } else if(c.cmd.equals("miss")) {
-                flameSprite.setActive(false);
+                flameSprite.destroy();
             } else if(c.cmd.equals("hit")) {
-                flameSprite.setActive(false);
+                flameSprite.destroy();
             } else if(c.cmd.equals("dead")) {
                 DragonSprite sp = sprites.get(c.id-1);
-                sp.setActive(false);
+                sp.destroy();
                 Sprite ex = new Sprite(sc.getScene()) {
                     int count = 0;
                     
@@ -133,7 +133,7 @@ public class Main {
                                     setCenterY(c.y * CELL + CELL / 2);
                                     setPicture(sp.explosion.resize(fac));
                                 } else {
-                                    setActive(false);
+                                    destroy();
                                     setFinished();
                                     runNext();
                                 }

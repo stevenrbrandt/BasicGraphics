@@ -100,8 +100,8 @@ public class Game {
             @Override
             public void collision(Enemy sp1, Shooter sp2) {
                 Enemy.clip.play();
-                sp1.setActive(false);
-                sp2.setActive(false);
+                sp1.destroy();
+                sp2.destroy();
                 JOptionPane.showMessageDialog(sc, "You lose! Game Over!");
                 System.exit(0);
             }
@@ -110,8 +110,9 @@ public class Game {
             @Override
             public void collision(Enemy sp1, Bullet sp2) {
                 Enemy.clip.play();
-                sp1.setActive(false);
-                sp2.setActive(false);
+                sp1.destroy();
+                sp2.destroy();
+                enemyCount--;
                 if (enemyCount == 0) {
                     JOptionPane.showMessageDialog(sc, "You win! Game Over!");
                     System.exit(0);

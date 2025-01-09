@@ -143,7 +143,7 @@ public class Flyer {
                                     Plasma.makeBall(c,PLASMA_SIZE + iteration()-steps+bloom));
                             }
                             if(iteration() == maxIteration()) {
-                                pl.setActive(false);
+                                pl.destroy();
                                 boom.playOverlapping();
                             }
                         }

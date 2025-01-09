@@ -116,7 +116,7 @@ public class Sprite implements MouseListener, Comparable<Sprite> {
     int yindex;
     
     public boolean isActive() { return active; }
-    public void setActive(boolean a) { active = a; }
+    public void destroy() { active = false; }
     
     public void setPicture(Picture new_p) {
         if (new_p == null) {

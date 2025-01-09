@@ -18,17 +18,6 @@ import basicgraphics.sounds.ReusableClip;
  */
 public class Enemy extends Sprite {
     static int enemyCount;
-    
-    @Override
-    public void setActive(boolean b) {
-        if(isActive() == b)
-            return;
-        if(b)
-            enemyCount++;
-        else
-            enemyCount--;
-        super.setActive(b);
-    }
 
     public Enemy(Scene sc) {
         super(sc);
