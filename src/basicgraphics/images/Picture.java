@@ -17,7 +17,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.nio.Buffer;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -54,7 +53,7 @@ public class Picture extends JComponent {
     /**
      * Set all white pixels to transparent
      */
-    public Picture transparentWhite() {
+    public Picture transparentBright() {
         BufferedImage newImage = addAlpha(image);
         for (int j = 0; j < height; j++) {
             for (int i = 0; i < width; i++) {
@@ -65,6 +64,26 @@ public class Picture extends JComponent {
             }
         }
         return new Picture(newImage);
+    }
+    public Picture transparentBright(int brightness) {
+        BufferedImage newImage = addAlpha(image);
+        for (int j = 0; j < height; j++) {
+            for (int i = 0; i < width; i++) {
+                int color = image.getRGB(i, j);
+                int br = getBrightness(color);
+                if (br >= brightness) {
+                    newImage.setRGB(i, j, 0x00FFFFFF);
+                }
+            }
+        }
+        return new Picture(newImage);
+    }
+
+    private int getBrightness(int color) {
+        int r = (color >> 16) & 0xFF;
+        int g = (color >> 8) & 0xFF;
+        int b = color & 0xFF;
+        return Math.min(Math.min(r,g),b);
     }
 
     /**

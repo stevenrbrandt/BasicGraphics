@@ -25,7 +25,7 @@ public class Mover extends Sprite {
 
     public Mover(Scene sc, Board board) {
         super(sc);
-        Picture p = new Picture("claw.png").transparentWhite();
+        Picture p = new Picture("claw.png").transparentBright();
         this.board = board;
         setPicture(p);
         ClockWorker.addTask(new Task() {

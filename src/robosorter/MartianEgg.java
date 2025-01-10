@@ -34,7 +34,7 @@ public class MartianEgg extends Sprite {
         g.setFont(new Font(Font.MONOSPACED, Font.BOLD, Robo.BLOCK_SIZE/2));
         g.drawString(""+num, Robo.BLOCK_SIZE/5, Robo.BLOCK_SIZE*3/4);
         setPicture(new Picture(image));
-        getPicture().transparentWhite();
+        getPicture().transparentBright();
     }
     public String toString() {
         return "Egg("+num+")";

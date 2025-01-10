@@ -39,8 +39,12 @@ public class SpriteComponent extends JComponent implements MouseListener {
     Set<Sprite> sprites() { return scene.sprites; }
     
     public Scene swapScene(Scene scene) {
+        if(scene == this.scene) {
+            return scene;
+        }
         Scene oldScene = this.scene;
         this.scene = scene;
+        if(scene == null) System.out.println("Null scene");
         assert scene.spritecomponent == oldScene.spritecomponent;
         return oldScene;
     }
@@ -636,5 +640,9 @@ public class SpriteComponent extends JComponent implements MouseListener {
 
     public Scene getScene() {
         return scene;
+    }
+
+    public Scene createScene() {
+        return new Scene(this);
     }
 }

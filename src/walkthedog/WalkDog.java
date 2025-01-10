@@ -22,10 +22,11 @@ import java.awt.Dimension;
  * @author sbrandt
  */
 class Dog extends Sprite {
+    public Scene scene2;
     Picture basePic;
     Dog(Scene sc) {
         super(sc);
-        basePic = new Picture("dog.jpg").transparentWhite().shrinkToMinimum();
+        basePic = new Picture("dog.jpg").transparentBright(0x90).shrinkToMinimum();
         setPicture(basePic);
         final double del = .1;
         ClockWorker.addTask(new Task() {
@@ -45,6 +46,9 @@ class Dog extends Sprite {
     @Override
     public void processEvent(SpriteCollisionEvent ev) {
         if(ev.eventType == CollisionEventType.WALL_INVISIBLE) {
+            if(getVelX() < 0) {
+                scene2 = migrate(scene2, getX(), getY(), getVelX(), getVelX());
+            }
             setVel(-getVelX(), 0);
             setPicture(getPicture().flipUpDown());
         }
@@ -54,8 +58,11 @@ public class WalkDog {
     public static void main(String[] args) {
         SpriteComponent sc = new SpriteComponent();
         Scene scene = sc.getScene();
+        Scene scene2 = sc.createScene();
         scene.setPainter(new BackgroundPainter(new Picture("park.jpg")));
+        scene2.setPainter(new BackgroundPainter(new Picture("park2.jpg")));
         Dog dog = new Dog(sc.getScene());
+        dog.scene2 = scene2;
         dog.setVel(-1.0, 0);
         dog.setY(350);
         dog.setX(800);

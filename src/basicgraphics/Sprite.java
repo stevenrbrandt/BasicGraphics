@@ -372,5 +372,17 @@ public class Sprite implements MouseListener, Comparable<Sprite> {
         af.rotate(heading+headingOffset, getWidth()/2, getHeight()/2);
         return af;
     }
-    
+
+    public Scene migrate(Scene scene2, double x, double y, double vx, double vy) {
+        SpriteComponent sc = scene.getSpriteComponent();
+        Scene oldScene = sc.swapScene(scene2);
+        scene.sprites.remove(this);
+        scene2.sprites.add(this);
+        scene = scene2;
+        this.x = x;
+        this.y = y;
+        this.velx = vx;
+        this.vely = vy;
+        return oldScene;
+    }
 }

@@ -30,7 +30,7 @@ public class Scene {
         Util.invokeAndWait(()->{ sprites.add(sp);});
     }
     
-    public Scene(SpriteComponent sc) {
+    Scene(SpriteComponent sc) {
         spritecomponent = sc;
     }
     public void setFocus(Sprite s) {
@@ -57,5 +57,9 @@ public class Scene {
     
     public Dimension getSize() {
         return spritecomponent.getSize();
+    }
+
+    public SpriteComponent getSpriteComponent() {
+        return spritecomponent;
     }
 }

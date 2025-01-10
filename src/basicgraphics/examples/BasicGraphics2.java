@@ -48,7 +48,7 @@ public class BasicGraphics2 {
         Graphics imgr = im1.getGraphics();
         imgr.setColor(color);
         imgr.fillOval(0, 0, ballSize, ballSize);
-        Picture p = new Picture(im1).transparentWhite();
+        Picture p = new Picture(im1).transparentBright();
         return p;
     }
     final static Picture orangeBall = createBall(Color.orange);
