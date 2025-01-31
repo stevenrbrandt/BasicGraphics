@@ -112,10 +112,10 @@ public class Flyer {
         final Falcon f = new Falcon(sc.getScene());
         sc.getScene().setFocus(f);
         
-        // Set the screen behavior
-        //sc.setBackgroundSize(new Dimension(10000,8000));
-        //sc.periodic_y = true;
-        //sc.periodic_x = true;
+        // Set the screen behavior, Currently Broken!
+        //sc.getScene().setBackgroundSize(new Dimension(10000,8000));
+        //sc.getScene().periodic_y = true;
+        //sc.getScene().periodic_x = true;
         
         final double INCR = Math.PI*2/100.0;
         // Note: Adding the listener to basic container 2.
