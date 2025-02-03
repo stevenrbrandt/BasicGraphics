@@ -86,7 +86,7 @@ public class Flyer {
         bc1.setStringLayout(splashLayout);
         JLabel title = new JLabel("Flyer Game");
         title.setForeground(Color.white);
-        bc1.add(title);
+        bc1.add("Title",title);
         JButton jstart = new JButton("Start");
         jstart.addActionListener(new ActionListener() {
             @Override
@@ -108,14 +108,14 @@ public class Flyer {
 //        bc2.setStringLayout(layout);
         bc2.setLayout(new BasicLayout());
         bc2.add("x=0,y=0,w=1,h=1",sc);
-        bf.show();
         final Falcon f = new Falcon(sc.getScene());
         sc.getScene().setFocus(f);
         
         // Set the screen behavior, Currently Broken!
-        //sc.getScene().setBackgroundSize(new Dimension(10000,8000));
-        //sc.getScene().periodic_y = true;
-        //sc.getScene().periodic_x = true;
+//        sc.getScene().setBackgroundSize(new Dimension(2000,2000));
+//        sc.getScene().periodic_y = true;
+//        sc.getScene().periodic_x = true;
+        bf.show();
         
         final double INCR = Math.PI*2/100.0;
         // Note: Adding the listener to basic container 2.

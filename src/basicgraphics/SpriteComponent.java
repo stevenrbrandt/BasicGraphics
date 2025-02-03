@@ -87,106 +87,66 @@ public class SpriteComponent extends JComponent implements MouseListener {
             int fh = full.height;
             int sx1 = scene.focus == null ? 0 : (int) (scene.focus.getCenterX() - d.width / 2);
             int sy1 = scene.focus == null ? 0 : (int) (scene.focus.getCenterY() - d.height / 2);
-            int ux1 = sx1 + d.width;
-            int uy1 = sy1 + d.height;
-            // Region:
-            // outside 
-            if(scene.periodic_x || scene.periodic_y) {
-                int px = 0, py = 0;
-                if(scene.periodic_x == false) {
-                    px = 0;
-                    if(sx1 < 0) sx1 = 0;
-                    else if(sx1 > fwidth) sx1 = fwidth;
-                    ux1 = sx1 + d.width;
-                }
-                else if(sx1 < 0) px = -1;
-                else if(ux1 >= fw) px = 1;
-                if(scene.periodic_y == false) {
-                    py = 0;
-                    if(sy1 < 0) sy1 = 0;
-                    else if(sy1 > fheight) sy1 = fheight;
-                    uy1 = sy1 + d.height;
-                }
-                else if(sy1 < 0) py = -1;
-                else if(uy1 > fh) py = 1;
-                if (px == 0 && py == 0) {
-                    pr.paintRegion(g, sx1, sy1, ux1, uy1, sx1, sy1, ux1, uy1);
-                } else if (px < 0 && py < 0) {
-                    pr.paintRegion(g, sx1, sy1, 0, 0,
-                            sx1+fw, sy1+fh, fw, fh);
-                    pr.paintRegion(g, 0, 0, ux1, uy1,
-                            0, 0, ux1, uy1);
-                    pr.paintRegion(g, 0, sy1, ux1, 0,
-                            0, sy1+fh, ux1, fh);
-                    pr.paintRegion(g, sx1, 0, 0, uy1,
-                            sx1+fw, 0, fw, uy1);
-                } else if(px < 0 && py == 0) {
-                    pr.paintRegion(g, sx1, sy1, 0, uy1,
-                            sx1+fw, sy1, fw, uy1);
-                    pr.paintRegion(g, 0, sy1, ux1, uy1,
-                            0, sy1, ux1, uy1);
-                } else if(px == 0 && py < 0) {
-                    pr.paintRegion(g, sx1, sy1, ux1, 0, 
-                            sx1, sy1+fh, ux1, fh);
-                    pr.paintRegion(g, sx1, 0, ux1, uy1, 
-                            sx1, 0, ux1, uy1);
-                } else if (px > 0 && py > 0) {
-                    pr.paintRegion(g, sx1, sy1, fw, fh,
-                            sx1, sy1, fw, fh);
-                    pr.paintRegion(g, fw, fh, ux1, uy1,
-                            0, 0, ux1-fw, uy1-fh);
-                    pr.paintRegion(g, fw, sy1, ux1, fh,
-                            0, sy1, ux1 - fw, fh);
-                    pr.paintRegion(g, sx1, fh, fw, uy1,
-                            sx1, 0, fw, uy1 - fh);
-                } else if (px > 0 && py == 0) {
-                    pr.paintRegion(g, sx1, sy1, fw, uy1,
-                            sx1, sy1, fw, uy1);
-                    pr.paintRegion(g, fw, sy1, ux1, uy1,
-                            0, sy1, ux1-fw, uy1);
-                } else if (px == 0 && py > 0) {
-                    pr.paintRegion(g, sx1, sy1, ux1, fh,
-                            sx1, sy1, ux1, fh);
-                    pr.paintRegion(g, sx1, fh, ux1, uy1,
-                            sx1, 0, ux1, uy1-fh);
-                } else if (px < 0 && py > 0) {
-                    pr.paintRegion(g, 0, sy1, ux1, fh,
-                            0, sy1, ux1, fh);
-                    pr.paintRegion(g, 0, fh, ux1, uy1,
-                            0, 0, ux1, uy1-fh);
-                    pr.paintRegion(g, sx1, sy1, 0, fh,
-                            sx1+fw, sy1, fw, fh);
-                    pr.paintRegion(g, sx1, fh, 0, uy1,
-                            sx1+fw, 0, fw, uy1-fh);
-                } else if (px > 0 && py < 0) {
-                    pr.paintRegion(g, sx1, 0, fw, uy1,
-                            sx1, 0, fw, uy1);
-                    pr.paintRegion(g, sx1, sy1, fw, 0,
-                            sx1, sy1+fh, fw, fh);
-                    pr.paintRegion(g, fw, 0, ux1, uy1,
-                            0, 0, ux1-fw, uy1);
-                    pr.paintRegion(g, fw, sy1, ux1, 0,
-                            0, sy1+fh, ux1-fw, fh);
-                } else {
-                    g.setColor(Color.red);
-                    g.fillRect(sx1, sy1, d.width, d.height);
-                }
-            } else {
-                sx1 = (int) setMinMax(sx1, 0, fwidth);
-                sy1 = (int) setMinMax(sy1, 0, fheight);
-                int dx1 = sx1;
-                int dy1 = sy1;
-                int sx2 = sx1 + d.width;
-                int sy2 = sy1 + d.height;
-                int dx2 = dx1 + d.width;
-                int dy2 = dy1 + d.height;
-                pr.paintRegion(g, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2);
-            }
+            if(!scene.periodic_x) sx1 = (int) setMinMax(sx1, 0, fwidth);
+            if(!scene.periodic_y) sy1 = (int) setMinMax(sy1, 0, fheight);
+            paintRegions(pr, g, 0, 0, d.width, d.height, sx1, sy1, sx1+d.width, sy1+d.height, fw, fh);
         } else {
             pr.paintRegion(g, 0, 0, d.width, d.height, 0, 0, d.width, d.height);
         }
     }
-    
+
+    static int tileNum(int n, int w) {
+        if(n < 0) n -= (w-1);
+        return n/w;
+    }
+
+    private void paintRegions(PaintRegion pr, Graphics g,
+                              int dx1, int dy1, int dx2, int dy2,
+                              int sx1, int sy1, int sx2, int sy2,
+                              int fw, int fh) {
+        if(tileNum(sx1,fw) != tileNum(sx2,fw)) {
+            int tile = tileNum(sx1,fw);
+            int low = tile*fw;
+            int high = tile*fw+fw-1;
+            int w1 = high-sx1;
+            int dxm = dx1+w1;
+            int sxm = sx1+w1;
+            assert tileNum(sx1,fw) == tileNum(sxm-1,fw);
+            paintRegions(pr, g, dx1, dy1, dxm, dy2, sx1, sy1, sxm, sy2, fw, fh);
+            paintRegions(pr, g, dxm+1, dy1, dx2, dy2, sxm+1, sy1, sx2, sy2, fw, fh);
+        } else if(tileNum(sy1,fh) != tileNum(sy2,fh)) {
+            int tile = tileNum(sy1,fh);
+            int low = tile*fh;
+            int high = tile*fh+fh-1;
+            int w1 = high-sy1;
+            int dym = dy1+w1;
+            int sym = sy1+w1;
+            assert sy1 + w1 == high;
+            assert tileNum(sy1,fh)==tileNum(sym,fh);
+            assert tileNum(sy2,fh) == tileNum(sym+1,fh);
+            paintRegions(pr, g, dx1, dy1, dx2, dym, sx1, sy1, sx2, sym, fw, fh);
+            paintRegions(pr, g, dx1, dym+1, dx2, dy2, sx1, sym+1, sx2, sy2, fw, fh);
+        } else {
+            if(sx1 < 0) {
+                sx1 += fw;
+                sx2 += fw;
+            }
+            if(sy1 < 0) {
+                sy1 += fh;
+                sy2 += fh;
+            }
+            if(sx2 > fw) {
+                sx2 -= fw;
+                sx1 -= fw;
+            }
+            if(sy2 > fh) {
+                sy2 -= fh;
+                sy1 -= fh;
+            }
+            pr.paintRegion(g, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2);
+        }
+    }
+
     public void setOffsetX(int x) { scene.offsetX = x; }
     public int getOffsetX() { return scene.offsetX; }
     public void setOffsetY(int y) { scene.offsetY = y; }
