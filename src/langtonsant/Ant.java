@@ -22,7 +22,7 @@ public class Ant {
     };
     int delx, dely;
     boolean[][] grid = new boolean[NX][NY];
-    final static int NX = 100, NY = 40, PIXELS_X = 1400, PIXELS_Y = 800, SPEED = 5;
+    final static int NX = 100, NY = 40, PIXELS_X = 1400, PIXELS_Y = 800, SPEED = 50;
     public static void main(String[] args) {
         Ant ant = new Ant();
     }

@@ -5,7 +5,6 @@
  */
 package basicgraphics;
 
-import basicgraphics.images.Picture;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -26,7 +25,6 @@ import javax.swing.JMenuItem;
 import javax.swing.SwingUtilities;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.LayoutManager;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -160,7 +158,7 @@ public class BasicFrame {
      * Sets the layout of this frame to a simple layout with a single centered component.
      * @param mainComponent The component.
      */
-    public void createBasicLayout(JComponent mainComponent) {
+    public void createSingletonLayout(JComponent mainComponent) {
         this.setStringLayout(new String[][] {{"center"}});
         this.add("center", mainComponent);
     }

@@ -93,7 +93,7 @@ public class BasicDialog {
         // Create a basic application
         BasicFrame bf = new BasicFrame("opt");
         final Icon sarah = new Picture("Sarah.png").getIcon();
-        bf.createBasicLayout(new JLabel(sarah));
+        bf.createSingletonLayout(new JLabel(sarah));
         bf.show();
         
         // Prompt using an icon
