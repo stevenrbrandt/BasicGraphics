@@ -36,7 +36,6 @@ public class Picture extends JComponent {
 
     private BufferedImage image;
     private int width, height;
-    boolean[][] mask;
     
     @Override
     public Dimension getSize() {
@@ -231,20 +230,9 @@ public class Picture extends JComponent {
         height = image.getHeight();
         setPreferredSize(new Dimension(width, height));
         setMinimumSize(getPreferredSize());
-        createMask();
         loadedImages.put(name, image);
     }
     static Map<String, BufferedImage> loadedImages = new HashMap<>();
-
-    final void createMask() {
-        mask = new boolean[width][height];
-        for (int j = 0; j < height; j++) {
-            for (int i = 0; i < width; i++) {
-                int color = image.getRGB(i, j);
-                mask[i][j] = (color & 0xFF000000) != 0;
-            }
-        }
-    }
 
     /**
      * You can also create a picture from an image directly (using
@@ -258,7 +246,6 @@ public class Picture extends JComponent {
         height = image.getHeight();
         setPreferredSize(new Dimension(width, height));
         setMinimumSize(getPreferredSize());
-        createMask();
     }
 
     public int getWidth() {
@@ -313,13 +300,9 @@ public class Picture extends JComponent {
     }
 
     public boolean mask(int i, int j) {
-        if (i < 0 || i >= mask.length) {
-            return false;
-        }
-        if (j < 0 || j >= mask[i].length) {
-            return false;
-        }
-        return mask[i][j];
+        if(i < 0 || i >= width || j < 0 || j >= height) return false;
+        int val = image.getRGB(i, j);
+        return (val & 0x00FFFFFF) != 0;
     }
 
     final static Random RAND = new Random();
