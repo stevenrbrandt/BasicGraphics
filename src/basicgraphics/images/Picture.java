@@ -302,7 +302,7 @@ public class Picture extends JComponent {
     public boolean mask(int i, int j) {
         if(i < 0 || i >= width || j < 0 || j >= height) return false;
         int val = image.getRGB(i, j);
-        return (val & 0x00FFFFFF) != 0;
+        return (val & 0xFF000000) != 0;
     }
 
     final static Random RAND = new Random();
