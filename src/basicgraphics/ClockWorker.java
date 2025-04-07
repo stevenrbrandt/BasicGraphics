@@ -50,14 +50,16 @@ public class ClockWorker {
             public void run() {
                 newTasks.add(SENTINAL);
                 while (true) {
-                    final Task t = newTasks.remove();
-                    if (t == SENTINAL) {
+                    final Task task = newTasks.remove();
+                    if (task == SENTINAL) {
                         return;
                     }
-                    Util.invokeAndWait(()->{ t.run_(); });
-                    //SwingUtilities.invokeLater(()->{ t.run_(); });
-                    if (!t.isFinished()) {
-                        newTasks.add(t);
+                    Util.invokeAndWait(()->{ task.run_(); });
+                    if (!task.isFinished()) {
+                        newTasks.add(task);
+                    }
+                    if (t == null) {
+                        break;
                     }
                 }
             }
